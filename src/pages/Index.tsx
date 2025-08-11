@@ -1,12 +1,23 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import Header from "@/components/Header";
+import CalculatorForm from "@/components/CalculatorForm";
+import TankDescription from "@/components/TankDescription";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Swahili Beach Hotel</h1>
+          <h2 className="text-2xl font-semibold text-primary mb-1">Tank Mass Calculator</h2>
+          <p className="text-muted-foreground">Single tank: 0160750 — LPG Bullet Tank</p>
+        </div>
+        
+        <div className="space-y-8">
+          <CalculatorForm />
+          <TankDescription />
+        </div>
+      </main>
     </div>
   );
 };
