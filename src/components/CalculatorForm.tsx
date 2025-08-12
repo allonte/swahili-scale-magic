@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import TankGauge from "@/components/TankGauge";
 
 interface FormData {
   productDensity: string;
@@ -27,22 +28,31 @@ const CalculatorForm = () => {
   });
 
   const [results, setResults] = useState<string>("");
+  const [heightPercentage, setHeightPercentage] = useState<number>(0);
+  const [capacity, setCapacity] = useState<number>(100);
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleHeightChange = (height: number) => {
+    setHeightPercentage(height);
+  };
+
+  const handleCapacityChange = (newCapacity: number) => {
+    setCapacity(newCapacity);
+  };
+
   const handleCalculate = () => {
-    // Basic calculation logic - in a real app this would be more complex
-    const height = parseFloat(formData.height);
+    // Use capacity from gauge and density for calculation
     const density = parseFloat(formData.productDensity);
     
-    if (height && density) {
-      const volume = Math.PI * Math.pow(595, 2) * (height / 10) / 1000000; // Convert mm to m
-      const mass = volume * density * 1000;
-      setResults(`Calculated Volume: ${volume.toFixed(3)} L\nCalculated Mass: ${mass.toFixed(2)} kg`);
+    if (capacity && density) {
+      const volume = capacity; // Volume in liters from gauge
+      const mass = volume * density;
+      setResults(`Height Percentage: ${heightPercentage}%\nCapacity: ${capacity.toLocaleString()} L\nCalculated Mass: ${mass.toFixed(2)} kg`);
     } else {
-      setResults("Please enter valid height and density values.");
+      setResults("Please set gauge position and enter valid density value.");
     }
   };
 
@@ -57,10 +67,12 @@ const CalculatorForm = () => {
       showVCFTable: false,
     });
     setResults("");
+    setHeightPercentage(0);
+    setCapacity(100);
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       <Card>
         <CardHeader>
           <CardTitle>Manual Inputs</CardTitle>
@@ -99,24 +111,14 @@ const CalculatorForm = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="height">Height (mm)</Label>
+              <Label htmlFor="pressure">Pressure (bar)</Label>
               <Input
-                id="height"
+                id="pressure"
                 type="number"
-                value={formData.height}
-                onChange={(e) => handleInputChange("height", e.target.value)}
+                value={formData.pressure}
+                onChange={(e) => handleInputChange("pressure", e.target.value)}
               />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="pressure">Pressure (bar)</Label>
-            <Input
-              id="pressure"
-              type="number"
-              value={formData.pressure}
-              onChange={(e) => handleInputChange("pressure", e.target.value)}
-            />
           </div>
 
           <div className="space-y-3">
@@ -148,13 +150,19 @@ const CalculatorForm = () => {
         </CardContent>
       </Card>
 
+      <TankGauge
+        heightPercentage={heightPercentage}
+        onHeightChange={handleHeightChange}
+        onCapacityChange={handleCapacityChange}
+      />
+
       <Card>
         <CardHeader>
           <CardTitle>Results</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-sm text-muted-foreground whitespace-pre-line">
-            {results || "Enter inputs and click Calculate to see results."}
+            {results || "Use the gauge to set tank level and click Calculate to see results."}
           </div>
         </CardContent>
       </Card>
