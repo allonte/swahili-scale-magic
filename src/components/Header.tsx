@@ -8,7 +8,7 @@ const Header = () => {
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">M</span>
           </div>
-          <span className="font-semibold text-foreground">Murban Engineering</span>
+          <span className="font-semibold text-foreground">Total Energies Uganda</span>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm">Help</Button>
