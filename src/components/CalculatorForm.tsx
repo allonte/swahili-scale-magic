@@ -44,7 +44,16 @@ const CalculatorForm = () => {
     24: 1.000088,
   };
 
-  const [results, setResults] = useState<any>(null);
+  interface CalculationResults {
+    referenceVolume: number;
+    vcf: number;
+    scf: number;
+    correctedVolume: number;
+    pcf: number;
+    density: number;
+    mass: number;
+  }
+  const [results, setResults] = useState<CalculationResults | string | null>(null);
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(100);
   
