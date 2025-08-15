@@ -103,7 +103,7 @@ const TankMesh = ({ fillLevel }: { fillLevel: number }) => {
       <mesh ref={liquidRef} position={[0, -tankHeight/2 + liquidHeight/2, 0]}>
         <cylinderGeometry args={[tankRadius * 0.95, tankRadius * 0.95, liquidHeight, 32]} />
         <meshStandardMaterial 
-          color="#3b82f6" 
+          color="#22c55e" 
           transparent 
           opacity={0.7}
         />
@@ -115,7 +115,7 @@ const TankMesh = ({ fillLevel }: { fillLevel: number }) => {
         return (
           <mesh key={level} position={[tankRadius + 0.1, indicatorHeight, 0]}>
             <boxGeometry args={[0.2, 0.05, 0.05]} />
-            <meshStandardMaterial color={level === Math.round(fillLevel) ? "#ef4444" : "#fbbf24"} />
+            <meshStandardMaterial color={level === Math.round(fillLevel) ? "#15803d" : "#16a34a"} />
           </mesh>
         );
       })}
@@ -134,7 +134,7 @@ const TankMesh = ({ fillLevel }: { fillLevel: number }) => {
             <mesh key={`text-${level}`} position={[tankRadius + 0.3, indicatorHeight, 0]}>
               <boxGeometry args={[0.1, 0.1, 0.01]} />
               <meshStandardMaterial 
-                color={level === Math.round(fillLevel) ? "#ef4444" : "#6b7280"}
+                color={level === Math.round(fillLevel) ? "#15803d" : "#16a34a"}
                 transparent
                 opacity={0.8}
               />

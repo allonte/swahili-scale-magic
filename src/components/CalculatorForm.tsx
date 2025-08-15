@@ -11,6 +11,7 @@ interface FormData {
   productTemperature: string;
   shellTemperature: string;
   height: string;
+  heightMm: string;
   pressure: string;
   applyPressureCorrection: boolean;
   showVCFTable: boolean;
@@ -22,10 +23,25 @@ const CalculatorForm = () => {
     productTemperature: "20",
     shellTemperature: "20",
     height: "0",
+    heightMm: "0",
     pressure: "17",
     applyPressureCorrection: false,
     showVCFTable: false,
   });
+
+  // Pressure correction factors
+  const pressureCorrectionFactors = {
+    15: 0.999890,
+    16: 0.999912,
+    17: 0.999934,
+    18: 0.999956,
+    19: 0.999978,
+    20: 1.000000,
+    21: 1.000022,
+    22: 1.000044,
+    23: 1.000066,
+    24: 1.000088,
+  };
 
   const [results, setResults] = useState<string>("");
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
@@ -62,6 +78,7 @@ const CalculatorForm = () => {
       productTemperature: "20",
       shellTemperature: "20",
       height: "0",
+      heightMm: "0",
       pressure: "17",
       applyPressureCorrection: false,
       showVCFTable: false,
@@ -73,6 +90,12 @@ const CalculatorForm = () => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <Tank3DGauge
+        heightPercentage={heightPercentage}
+        onHeightChange={handleHeightChange}
+        onCapacityChange={handleCapacityChange}
+      />
+      
       <Card>
         <CardHeader>
           <CardTitle>Manual Inputs</CardTitle>
@@ -110,6 +133,18 @@ const CalculatorForm = () => {
                 onChange={(e) => handleInputChange("shellTemperature", e.target.value)}
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="heightMm">Tank Height (mm)</Label>
+              <Input
+                id="heightMm"
+                type="number"
+                value={formData.heightMm}
+                onChange={(e) => handleInputChange("heightMm", e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="pressure">Pressure (bar)</Label>
               <Input
@@ -149,12 +184,6 @@ const CalculatorForm = () => {
           </div>
         </CardContent>
       </Card>
-
-      <Tank3DGauge
-        heightPercentage={heightPercentage}
-        onHeightChange={handleHeightChange}
-        onCapacityChange={handleCapacityChange}
-      />
 
       <Card>
         <CardHeader>
