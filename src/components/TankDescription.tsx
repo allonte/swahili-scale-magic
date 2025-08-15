@@ -2,15 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const TankDescription = () => {
   const specifications = [
-    { label: "Client", value: "Swahili Beach Hotel", label2: "Revision Date", value2: "30th July, 2025" },
-    { label: "Project No.", value: "20257001032TC", label2: "Revision No.", value2: "rev 01" },
-    { label: "Tank", value: "0160750", label2: "Tank Owner", value2: "Swahili Beach Hotel" },
-    { label: "Location", value: "Diani Beach, Kenya", label2: "Tank Description", value2: "LPG Bullet Tank" },
-    { label: "Nominal Diameter", value: "1190 mm", label2: "Cylinder Length", value2: "3700 mm" },
-    { label: "Tank Nominal Capacity", value: "3898 Liters", label2: "Date of Calibration", value2: "30/07/2025" },
-    { label: "Validity", value: "10 Years", label2: "Overall Uncertainty", value2: "+0.012%" },
-    { label: "Method of Calibration", value: "API MPMS CHAPTER 2", label2: "Tank calibrated by", value2: "Murban Engineering Limited" },
-    { label: "Certificate No.", value: "20257001032TC-0160750", label2: "", value2: "" },
+    { label: "Tank", value: "Tank 02", label2: "Date of Calibration", value2: "29/06/2025" },
+    { label: "Tank Owner", value: "Total Energies Jinja", label2: "Validity", value2: "10 Years" },
+    { label: "Location", value: "Jinja, Uganda", label2: "Overall Uncertainty", value2: "+0.012%" },
+    { label: "Tank Description", value: "LPG Bullet Tank", label2: "Method of Calibration", value2: "API MPMS CHAPTER 2" },
+    { label: "Nominal Diameter", value: "2422 mm", label2: "Tank calibrated by", value2: "Murban Engineering Limited" },
+    { label: "Cylinder Length", value: "15000 mm", label2: "Certificate No.", value2: "20257001028TC-02" },
+    { label: "Tank Nominal Capacity", value: "98682 Liters", label2: "", value2: "" },
   ];
 
   return (

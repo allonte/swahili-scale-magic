@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import TankGauge from "@/components/TankGauge";
+import Tank3DGauge from "@/components/Tank3DGauge";
 
 interface FormData {
   productDensity: string;
@@ -150,7 +150,7 @@ const CalculatorForm = () => {
         </CardContent>
       </Card>
 
-      <TankGauge
+      <Tank3DGauge
         heightPercentage={heightPercentage}
         onHeightChange={handleHeightChange}
         onCapacityChange={handleCapacityChange}
