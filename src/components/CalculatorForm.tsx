@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import Tank3DGauge from "@/components/Tank3DGauge";
+import DataTableModals from "@/components/DataTableModals";
 
 interface FormData {
   productDensity: string;
@@ -43,32 +44,88 @@ const CalculatorForm = () => {
     24: 1.000088,
   };
 
-  const [results, setResults] = useState<string>("");
+  const [results, setResults] = useState<any>(null);
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(100);
+  
+  // Modal states
+  const [showShellFactors, setShowShellFactors] = useState(false);
+  const [showPressureFactors, setShowPressureFactors] = useState(false);
+  const [showHeightCapacity, setShowHeightCapacity] = useState(false);
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // If height in mm is changed manually, update the gauge
+    if (field === 'heightMm' && typeof value === 'string') {
+      const heightMm = parseFloat(value);
+      if (!isNaN(heightMm)) {
+        const percentage = (heightMm / 2954) * 100; // Convert mm to percentage
+        setHeightPercentage(Math.min(100, Math.max(0, percentage)));
+        
+        // Also update capacity based on height
+        const getCapacityFromHeight = (heightMm: number): number => {
+          // Simplified capacity calculation - would use the full tank data interpolation
+          return Math.round((heightMm / 2954) * 98682); // Linear approximation
+        };
+        
+        setCapacity(getCapacityFromHeight(heightMm));
+      }
+    }
   };
 
   const handleHeightChange = (height: number) => {
     setHeightPercentage(height);
+    // Auto-sync height in mm based on percentage
+    const heightMm = (height / 100) * 2954; // Max height from tank data
+    setFormData(prev => ({ ...prev, heightMm: heightMm.toString() }));
   };
 
   const handleCapacityChange = (newCapacity: number) => {
     setCapacity(newCapacity);
   };
 
+  // Volume correction factors (VCF) - simplified lookup
+  const getVCF = (temperature: number, density: number) => {
+    // Simplified VCF calculation - would normally interpolate from full table
+    if (temperature === 20) return 1.000000; // Baseline temperature
+    const tempDiff = Math.abs(20 - temperature);
+    const correction = tempDiff * 0.002; // Simplified linear approximation
+    return temperature > 20 ? 1 - correction : 1 + correction;
+  };
+
   const handleCalculate = () => {
-    // Use capacity from gauge and density for calculation
     const density = parseFloat(formData.productDensity);
+    const productTemp = parseFloat(formData.productTemperature);
+    const pressure = parseFloat(formData.pressure);
     
-    if (capacity && density) {
-      const volume = capacity; // Volume in liters from gauge
-      const mass = volume * density;
-      setResults(`Height Percentage: ${heightPercentage}%\nCapacity: ${capacity.toLocaleString()} L\nCalculated Mass: ${mass.toFixed(2)} kg`);
+    if (capacity && density && !isNaN(productTemp) && !isNaN(pressure)) {
+      const referenceVolume = capacity; // Volume in liters from gauge
+      
+      // Get correction factors
+      const vcf = getVCF(productTemp, density);
+      const pcf = pressureCorrectionFactors[pressure as keyof typeof pressureCorrectionFactors] || 1.000000;
+      const scf = 1.000000; // Shell correction factor (simplified)
+      
+      // Calculate corrected volume
+      const correctedVolume = formData.applyPressureCorrection 
+        ? referenceVolume * vcf * pcf * scf
+        : referenceVolume * vcf * scf;
+      
+      // Calculate mass
+      const mass = correctedVolume * density;
+      
+      setResults({
+        referenceVolume: referenceVolume,
+        vcf: vcf,
+        scf: scf,
+        correctedVolume: correctedVolume,
+        pcf: pcf,
+        density: density,
+        mass: mass
+      });
     } else {
-      setResults("Please set gauge position and enter valid density value.");
+      setResults("Please set gauge position and enter valid values.");
     }
   };
 
@@ -83,9 +140,23 @@ const CalculatorForm = () => {
       applyPressureCorrection: false,
       showVCFTable: false,
     });
-    setResults("");
+    setResults(null);
     setHeightPercentage(0);
     setCapacity(100);
+  };
+
+  const handleModalOpen = (type: string, open: boolean) => {
+    switch (type) {
+      case 'shell':
+        setShowShellFactors(open);
+        break;
+      case 'pressure':
+        setShowPressureFactors(open);
+        break;
+      case 'height':
+        setShowHeightCapacity(open);
+        break;
+    }
   };
 
   return (
@@ -178,9 +249,15 @@ const CalculatorForm = () => {
           <div className="flex flex-wrap gap-2 pt-4">
             <Button onClick={handleCalculate}>Calculate</Button>
             <Button variant="outline" onClick={handleReset}>Reset</Button>
-            <Button variant="outline" size="sm">Shell Correction Factors</Button>
-            <Button variant="outline" size="sm">Pressure Factors</Button>
-            <Button variant="outline" size="sm">Height↔Capacity Table</Button>
+            <Button variant="outline" size="sm" onClick={() => setShowShellFactors(true)}>
+              Shell Correction Factors
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowPressureFactors(true)}>
+              Pressure Factors
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowHeightCapacity(true)}>
+              Height↔Capacity Table
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -190,11 +267,66 @@ const CalculatorForm = () => {
           <CardTitle>Results</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-sm text-muted-foreground whitespace-pre-line">
-            {results || "Use the gauge to set tank level and click Calculate to see results."}
-          </div>
+          {results && typeof results === 'object' ? (
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Reference Volume (L)</span>
+                  <span className="font-medium">{results.referenceVolume.toFixed(3)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Product Temperature Factor (VCF)</span>
+                  <span className="font-medium">{results.vcf.toFixed(6)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Shell Correction Factor (SCF)</span>
+                  <span className="font-medium">{results.scf.toFixed(6)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Corrected Volume (L)</span>
+                  <span className="font-medium">{results.correctedVolume.toFixed(3)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">PCF used</span>
+                  <span className="font-medium">{results.pcf.toFixed(6)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Product Density used (kg/L)</span>
+                  <span className="font-medium">{results.density.toFixed(3)}</span>
+                </div>
+              </div>
+              <div className="pt-2 border-t">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold">Mass (kg)</span>
+                  <span className="text-xl font-bold text-primary">{results.mass.toFixed(3)}</span>
+                </div>
+              </div>
+              <div className="flex gap-2 pt-4">
+                <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                  Copy results
+                </Button>
+                <Button variant="outline" size="sm">
+                  Export CSV
+                </Button>
+                <Button variant="outline" size="sm">
+                  Print
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              {typeof results === 'string' ? results : "Use the gauge to set tank level and click Calculate to see results."}
+            </div>
+          )}
         </CardContent>
       </Card>
+      
+      <DataTableModals
+        showShellFactors={showShellFactors}
+        showPressureFactors={showPressureFactors}
+        showHeightCapacity={showHeightCapacity}
+        onOpenChange={handleModalOpen}
+      />
     </div>
   );
 };
