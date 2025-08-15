@@ -6,6 +6,38 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import Tank3DGauge from "@/components/Tank3DGauge";
 import DataTableModals from "@/components/DataTableModals";
+import { heightCapacityData } from "@/components/TankGauge";
+
+const heightCapacityArray = Object.entries(heightCapacityData)
+  .map(([h, c]) => [Number(h), c] as [number, number])
+  .sort((a, b) => a[0] - b[0]);
+const maxHeight = heightCapacityArray[heightCapacityArray.length - 1][0];
+const maxCapacity = heightCapacityArray[heightCapacityArray.length - 1][1];
+
+const getCapacityFromHeight = (heightMm: number): number => {
+  if (heightMm <= 0) return heightCapacityArray[0][1];
+  if (heightMm >= maxHeight) return maxCapacity;
+  const lower = Math.floor(heightMm);
+  const upper = Math.ceil(heightMm);
+  const c1 = heightCapacityData[lower];
+  const c2 = heightCapacityData[upper];
+  const ratio = (heightMm - lower) / (upper - lower);
+  return c1 + (c2 - c1) * ratio;
+};
+
+const getHeightFromCapacity = (capacity: number): number => {
+  if (capacity <= heightCapacityArray[0][1]) return heightCapacityArray[0][0];
+  if (capacity >= maxCapacity) return maxHeight;
+  for (let i = 0; i < heightCapacityArray.length - 1; i++) {
+    const [h1, c1] = heightCapacityArray[i];
+    const [h2, c2] = heightCapacityArray[i + 1];
+    if (capacity >= c1 && capacity <= c2) {
+      const ratio = (capacity - c1) / (c2 - c1);
+      return h1 + (h2 - h1) * ratio;
+    }
+  }
+  return maxHeight;
+};
 
 interface FormData {
   productDensity: string;
@@ -44,7 +76,17 @@ const CalculatorForm = () => {
     24: 1.000088,
   };
 
-  const [results, setResults] = useState<any>(null);
+  interface CalculationResults {
+    referenceVolume: number;
+    vcf: number;
+    scf: number;
+    correctedVolume: number;
+    pcf: number;
+    density: number;
+    mass: number;
+  }
+
+  const [results, setResults] = useState<CalculationResults | string | null>(null);
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(100);
   
@@ -60,25 +102,20 @@ const CalculatorForm = () => {
     if (field === 'heightMm' && typeof value === 'string') {
       const heightMm = parseFloat(value);
       if (!isNaN(heightMm)) {
-        const percentage = (heightMm / 2954) * 100; // Convert mm to percentage
+        const capacityFromHeight = getCapacityFromHeight(heightMm);
+        const percentage = (capacityFromHeight / maxCapacity) * 100;
         setHeightPercentage(Math.min(100, Math.max(0, percentage)));
-        
-        // Also update capacity based on height
-        const getCapacityFromHeight = (heightMm: number): number => {
-          // Simplified capacity calculation - would use the full tank data interpolation
-          return Math.round((heightMm / 2954) * 98682); // Linear approximation
-        };
-        
-        setCapacity(getCapacityFromHeight(heightMm));
+        setCapacity(capacityFromHeight);
       }
     }
   };
 
-  const handleHeightChange = (height: number) => {
-    setHeightPercentage(height);
-    // Auto-sync height in mm based on percentage
-    const heightMm = (height / 100) * 2954; // Max height from tank data
-    setFormData(prev => ({ ...prev, heightMm: heightMm.toString() }));
+  const handleHeightChange = (percentage: number) => {
+    setHeightPercentage(percentage);
+    const capacityFromPercentage = (percentage / 100) * maxCapacity;
+    const heightMm = getHeightFromCapacity(capacityFromPercentage);
+    setFormData(prev => ({ ...prev, heightMm: heightMm.toFixed(1) }));
+    setCapacity(capacityFromPercentage);
   };
 
   const handleCapacityChange = (newCapacity: number) => {
