@@ -27,7 +27,7 @@ const tankData: [number, number][] = [
 
 const getCapacityFromHeight = (heightMm: number): number => {
   if (heightMm <= 0) return tankData[0][1];
-  if (heightMm >= 2583) return tankData[tankData.length - 1][1];
+  if (heightMm >= 2955) return 98695; // Use the nominal capacity
   
   // Find the two closest points and interpolate
   for (let i = 0; i < tankData.length - 1; i++) {
@@ -57,9 +57,9 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
   const tankRadius = 1.2;
   const hemisphereRadius = tankRadius;
   
-  // Calculate liquid geometry for horizontal tank
+  // Calculate liquid geometry for horizontal tank - fill from bottom up
   const liquidHeight = (fillLevel / 100) * (tankRadius * 2);
-  const liquidY = -tankRadius + liquidHeight;
+  const liquidY = -tankRadius + liquidHeight / 2;
 
   return (
     <group>
@@ -105,20 +105,20 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         />
       </mesh>
 
-      {/* Liquid inside - cylindrical part */}
+      {/* Liquid inside - box geometry that fills from bottom */}
       {fillLevel > 0 && (
-        <mesh ref={liquidRef} position={[0, liquidY - tankRadius, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[tankRadius * 0.98, tankRadius * 0.98, tankLength, 32]} />
+        <mesh ref={liquidRef} position={[0, -tankRadius + liquidHeight/2, 0]}>
+          <boxGeometry args={[tankLength, liquidHeight, tankRadius * 1.8]} />
           <meshStandardMaterial 
             color="hsl(var(--primary))" 
             transparent 
-            opacity={0.7}
+            opacity={0.6}
           />
         </mesh>
       )}
 
       {/* Level indicators on the side */}
-      {[10, 25, 50, 75, 90].map(level => {
+      {[5, 10, 85, 90, 95].map(level => {
         const indicatorY = -tankRadius + (level / 100) * (tankRadius * 2);
         return (
           <group key={level}>
@@ -139,7 +139,7 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
       })}
 
       {/* Level percentage text markers */}
-      {[10, 25, 50, 75, 90].map(level => {
+      {[5, 10, 85, 90, 95].map(level => {
         const indicatorY = -tankRadius + (level / 100) * (tankRadius * 2);
         return (
           <mesh key={`text-${level}`} position={[-tankLength/2 - 0.5, indicatorY, 0]}>
@@ -172,13 +172,13 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
     onHeightChange(newPercentage);
     
     // Calculate height in mm based on percentage
-    const heightMm = (newPercentage / 100) * 2583; // Max height from data
+    const heightMm = (newPercentage / 100) * 2955; // Max height from specifications
     const capacity = getCapacityFromHeight(heightMm);
     onCapacityChange(capacity);
   };
 
   // Calculate current height and capacity
-  const currentHeightMm = (heightPercentage / 100) * 2583;
+  const currentHeightMm = (heightPercentage / 100) * 2955;
   const currentCapacity = getCapacityFromHeight(currentHeightMm);
 
   return (
@@ -242,12 +242,12 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
           <div className="text-xs text-muted-foreground bg-muted/20 p-2 rounded">
             <div className="font-medium mb-1">Reference Levels:</div>
             <div className="grid grid-cols-2 gap-1">
-              <div>10% → {(0.1 * 2583).toFixed(0)} mm</div>
-              <div>25% → {(0.25 * 2583).toFixed(0)} mm</div>
-              <div>50% → {(0.5 * 2583).toFixed(0)} mm</div>
-              <div>75% → {(0.75 * 2583).toFixed(0)} mm</div>
-              <div>90% → {(0.9 * 2583).toFixed(0)} mm</div>
-              <div>Max → 2583 mm</div>
+              <div>5% → 154.45 mm</div>
+              <div>10% → 308.90 mm</div>
+              <div>85% → 2625.65 mm</div>
+              <div>90% → 2780.1 mm</div>
+              <div>95% → 2934.55 mm</div>
+              <div>Max → 2955 mm</div>
             </div>
           </div>
         </div>
