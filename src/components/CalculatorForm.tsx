@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import Tank3DGauge from "@/components/Tank3DGauge";
+import HorizontalBulletTank3D from "@/components/HorizontalBulletTank3D";
 import DataTableModals from "@/components/DataTableModals";
 
 interface FormData {
@@ -60,13 +60,13 @@ const CalculatorForm = () => {
     if (field === 'heightMm' && typeof value === 'string') {
       const heightMm = parseFloat(value);
       if (!isNaN(heightMm)) {
-        const percentage = (heightMm / 2954) * 100; // Convert mm to percentage
+        const percentage = (heightMm / 2583) * 100; // Convert mm to percentage
         setHeightPercentage(Math.min(100, Math.max(0, percentage)));
         
         // Also update capacity based on height
         const getCapacityFromHeight = (heightMm: number): number => {
           // Simplified capacity calculation - would use the full tank data interpolation
-          return Math.round((heightMm / 2954) * 98682); // Linear approximation
+          return Math.round((heightMm / 2583) * 92897); // Linear approximation
         };
         
         setCapacity(getCapacityFromHeight(heightMm));
@@ -77,7 +77,7 @@ const CalculatorForm = () => {
   const handleHeightChange = (height: number) => {
     setHeightPercentage(height);
     // Auto-sync height in mm based on percentage
-    const heightMm = (height / 100) * 2954; // Max height from tank data
+    const heightMm = (height / 100) * 2583; // Max height from tank data
     setFormData(prev => ({ ...prev, heightMm: heightMm.toString() }));
   };
 
@@ -161,7 +161,7 @@ const CalculatorForm = () => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      <Tank3DGauge
+      <HorizontalBulletTank3D
         heightPercentage={heightPercentage}
         onHeightChange={handleHeightChange}
         onCapacityChange={handleCapacityChange}
