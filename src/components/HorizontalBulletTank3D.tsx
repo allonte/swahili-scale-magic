@@ -153,15 +153,6 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         );
       })}
 
-      {/* Support legs */}
-      <mesh position={[-tankLength/3, -tankRadius - 0.3, 0]}>
-        <boxGeometry args={[0.2, 0.6, 0.2]} />
-        <meshStandardMaterial color="hsl(var(--muted-foreground))" />
-      </mesh>
-      <mesh position={[tankLength/3, -tankRadius - 0.3, 0]}>
-        <boxGeometry args={[0.2, 0.6, 0.2]} />
-        <meshStandardMaterial color="hsl(var(--muted-foreground))" />
-      </mesh>
     </group>
   );
 };
