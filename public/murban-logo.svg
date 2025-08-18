@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120">
+  <defs>
+    <clipPath id="ovalClip">
+      <ellipse cx="80" cy="60" rx="70" ry="45" />
+    </clipPath>
+  </defs>
+  <ellipse cx="80" cy="60" rx="70" ry="45" fill="white" stroke="#b11f24" stroke-width="8" />
+  <g clip-path="url(#ovalClip)">
+    <rect x="10" y="0" width="140" height="60" fill="#b11f24" />
+    <rect x="10" y="60" width="140" height="60" fill="#1d3f7a" />
+    <path d="M10 60 L30 15 L50 60 L70 15 L90 60 L110 15 L130 60 L130 120 L10 120 Z" fill="white" />
+  </g>
+  <text x="160" y="70" font-family="Arial, sans-serif" font-size="36" fill="#1d3f7a" font-weight="bold">murban</text>
+  <text x="160" y="95" font-family="Arial, sans-serif" font-size="18" fill="#b11f24" font-weight="bold">ENGINEERING</text>
+</svg>
