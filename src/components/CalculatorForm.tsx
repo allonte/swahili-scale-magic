@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import HorizontalBulletTank3D from "@/components/HorizontalBulletTank3D";
 import DataTableModals from "@/components/DataTableModals";
+import { getVolumeCorrectionFactor } from "@/lib/volumeCorrection";
 
 interface FormData {
   productDensity: string;
@@ -85,13 +86,9 @@ const CalculatorForm = () => {
     setCapacity(newCapacity);
   };
 
-  // Volume correction factors (VCF) - simplified lookup
+  // Volume correction factors (VCF) - using calibration table data
   const getVCF = (temperature: number, density: number) => {
-    // Simplified VCF calculation - would normally interpolate from full table
-    if (temperature === 20) return 1.000000; // Baseline temperature
-    const tempDiff = Math.abs(20 - temperature);
-    const correction = tempDiff * 0.002; // Simplified linear approximation
-    return temperature > 20 ? 1 - correction : 1 + correction;
+    return getVolumeCorrectionFactor(density, temperature);
   };
 
   const handleCalculate = () => {
