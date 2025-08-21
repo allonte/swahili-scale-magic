@@ -43,10 +43,12 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
   const tankLength = 8;
   const tankRadius = 1.2;
   const hemisphereRadius = tankRadius;
-  
+
   // Calculate liquid geometry for horizontal tank - fill from bottom up
   const liquidHeight = (fillLevel / 100) * (tankRadius * 2);
-  const clipPlane = new Plane(new Vector3(0, 1, 0), tankRadius - liquidHeight);
+  // Move a clipping plane from the bottom (-tankRadius) to the top (+tankRadius)
+  // so that increasing the fill level reveals more liquid from the bottom up.
+  const clipPlane = new Plane(new Vector3(0, -1, 0), -tankRadius + liquidHeight);
 
   return (
     <group>
