@@ -76,9 +76,9 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
       {/* Right hemisphere end */}
       <mesh position={[tankLength/2, 0, 0]} rotation={[0, Math.PI, 0]}>
         <sphereGeometry args={[hemisphereRadius, 16, 8, 0, Math.PI]} />
-        <meshStandardMaterial 
-          color="hsl(var(--muted))" 
-          transparent 
+        <meshStandardMaterial
+          color="hsl(var(--muted))"
+          transparent
           opacity={0.2}
         />
       </mesh>
@@ -86,13 +86,21 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
       {/* Tank outline wireframe */}
       <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[tankRadius, tankRadius, tankLength, 32]} />
-        <meshStandardMaterial 
-          color="hsl(var(--border))" 
-          transparent 
+        <meshStandardMaterial
+          color="hsl(var(--border))"
+          transparent
           opacity={0.4}
           wireframe
         />
       </mesh>
+
+      {/* Support bars at edges */}
+      {[-tankLength / 2, tankLength / 2].map((x, idx) => (
+        <mesh key={`support-${idx}`} position={[x, -tankRadius - 0.4, 0]}>
+          <boxGeometry args={[0.2, 0.8, 0.2]} />
+          <meshStandardMaterial color="hsl(var(--muted-foreground))" />
+        </mesh>
+      ))}
 
       {/* Liquid inside - cylindrical geometry clipped at the fill level */}
       {fillLevel > 0 && (
@@ -176,13 +184,12 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
             <directionalLight position={[-5, 10, 5]} intensity={0.8} />
             <directionalLight position={[5, -5, -5]} intensity={0.3} />
             <BulletTankMesh fillLevel={heightPercentage} />
-            <OrbitControls 
-              enablePan={false} 
-              enableZoom={true} 
+            <OrbitControls
+              enablePan={false}
+              enableZoom={true}
               maxDistance={15}
               minDistance={5}
             />
-            <gridHelper args={[12, 12, "hsl(var(--border))", "hsl(var(--border))"]} position={[0, -2, 0]} />
           </Canvas>
         </div>
 
