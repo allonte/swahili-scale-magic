@@ -4,6 +4,7 @@ import { OrbitControls } from '@react-three/drei';
 import { Mesh } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
+import { heightCapacityData } from "@/components/TankGauge";
 
 interface HorizontalBulletTank3DProps {
   heightPercentage: number;
@@ -11,36 +12,22 @@ interface HorizontalBulletTank3DProps {
   onCapacityChange: (capacity: number) => void;
 }
 
-// Tank data from height to capacity (using the provided extensive data)
-const tankData: [number, number][] = [
-  [0, 202], [46, 743], [92, 1284], [138, 2090], [184, 2953], [230, 3960],
-  [276, 5700], [322, 6932], [368, 8234], [414, 9602], [460, 11030], [506, 12514],
-  [552, 14049], [598, 15632], [644, 17259], [690, 18928], [736, 20634], [782, 22376],
-  [828, 24150], [874, 25953], [920, 27784], [966, 29639], [1012, 31516], [1058, 33413],
-  [1104, 35328], [1150, 37258], [1196, 39203], [1242, 41158], [1288, 43122], [1334, 45094],
-  [1380, 47070], [1426, 49049], [1472, 51028], [1518, 53006], [1564, 54980], [1610, 56949],
-  [1656, 58910], [1702, 60861], [1748, 62799], [1794, 64724], [1840, 66631], [1886, 68519],
-  [1932, 70386], [1978, 72228], [2024, 74045], [2070, 75833], [2116, 77589], [2162, 79311],
-  [2208, 80995], [2254, 82634], [2300, 84242], [2346, 85816], [2392, 87357], [2438, 88865],
-  [2484, 90342], [2530, 91787], [2576, 93201], [2583, 92897]
-];
-
 const getCapacityFromHeight = (heightMm: number): number => {
-  if (heightMm <= 0) return tankData[0][1];
-  if (heightMm >= 2955) return 98695; // Use the nominal capacity
-  
-  // Find the two closest points and interpolate
-  for (let i = 0; i < tankData.length - 1; i++) {
-    const [h1, c1] = tankData[i];
-    const [h2, c2] = tankData[i + 1];
-    
-    if (heightMm >= h1 && heightMm <= h2) {
-      const ratio = (heightMm - h1) / (h2 - h1);
-      return c1 + (c2 - c1) * ratio;
-    }
+  if (heightMm <= 0) return heightCapacityData[0];
+  const maxHeight = 2954;
+  if (heightMm >= maxHeight) return heightCapacityData[maxHeight];
+
+  const lower = Math.floor(heightMm);
+  const upper = Math.ceil(heightMm);
+  const lowerCap = heightCapacityData[lower];
+  const upperCap = heightCapacityData[upper];
+
+  if (lowerCap === undefined || upperCap === undefined) {
+    return heightCapacityData[lower] || 0;
   }
-  
-  return tankData[tankData.length - 1][1];
+
+  const ratio = heightMm - lower;
+  return Math.round(lowerCap + (upperCap - lowerCap) * ratio);
 };
 
 const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
