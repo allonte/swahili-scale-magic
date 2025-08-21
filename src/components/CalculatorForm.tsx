@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import HorizontalBulletTank3D from "@/components/HorizontalBulletTank3D";
 import DataTableModals from "@/components/DataTableModals";
 import { getVolumeCorrectionFactor } from "@/lib/volumeCorrection";
+import { getCapacityFromHeight } from "@/lib/heightCapacity";
 
 interface FormData {
   productDensity: string;
@@ -17,6 +18,16 @@ interface FormData {
   pressure: string;
   applyPressureCorrection: boolean;
   showVCFTable: boolean;
+}
+
+interface Results {
+  referenceVolume: number;
+  vcf: number;
+  scf: number;
+  correctedVolume: number;
+  pcf: number;
+  density: number;
+  mass: number;
 }
 
 const CalculatorForm = () => {
@@ -45,7 +56,7 @@ const CalculatorForm = () => {
     24: 1.000088,
   };
 
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<Results | null>(null);
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(100);
   
@@ -61,16 +72,11 @@ const CalculatorForm = () => {
     if (field === 'heightMm' && typeof value === 'string') {
       const heightMm = parseFloat(value);
       if (!isNaN(heightMm)) {
-        const percentage = (heightMm / 2955) * 100; // Convert mm to percentage
+        const percentage = (heightMm / 2954) * 100; // Convert mm to percentage
         setHeightPercentage(Math.min(100, Math.max(0, percentage)));
-        
-        // Also update capacity based on height
-        const getCapacityFromHeight = (heightMm: number): number => {
-          // Simplified capacity calculation - would use the full tank data interpolation
-          return Math.round((heightMm / 2955) * 98695); // Linear approximation using nominal capacity
-        };
-        
-        setCapacity(getCapacityFromHeight(heightMm));
+
+        // Also update capacity based on height using lookup table
+        setCapacity(Math.round(getCapacityFromHeight(heightMm)));
       }
     }
   };
@@ -78,7 +84,7 @@ const CalculatorForm = () => {
   const handleHeightChange = (height: number) => {
     setHeightPercentage(height);
     // Auto-sync height in mm based on percentage
-    const heightMm = (height / 100) * 2955; // Max height from tank specifications
+    const heightMm = (height / 100) * 2954; // Max height based on tank data
     setFormData(prev => ({ ...prev, heightMm: heightMm.toString() }));
   };
 
