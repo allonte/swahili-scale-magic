@@ -59,21 +59,17 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
       {/* Cylindrical body */}
       <mesh ref={tankRef} position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[tankRadius, tankRadius, tankLength, 32]} />
-        <meshStandardMaterial
-          color="hsl(var(--muted))"
-          transparent
-          opacity={0.2}
-        />
+        <meshStandardMaterial color="hsl(var(--background))" />
       </mesh>
 
       {/* Hemispherical ends */}
       <mesh position={[-tankLength / 2, 0, 0]}>
         <sphereGeometry args={[hemisphereRadius, 16, 8, 0, Math.PI]} />
-        <meshStandardMaterial color="hsl(var(--muted))" transparent opacity={0.2} />
+        <meshStandardMaterial color="hsl(var(--background))" />
       </mesh>
       <mesh position={[tankLength / 2, 0, 0]} rotation={[0, Math.PI, 0]}>
         <sphereGeometry args={[hemisphereRadius, 16, 8, 0, Math.PI]} />
-        <meshStandardMaterial color="hsl(var(--muted))" transparent opacity={0.2} />
+        <meshStandardMaterial color="hsl(var(--background))" />
       </mesh>
 
       {/* Liquid */}
@@ -81,7 +77,7 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         <mesh rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[tankRadius * 0.99, tankRadius * 0.99, tankLength, 32]} />
           <meshStandardMaterial
-            color="#bbf7d0"
+            color="#22c55e"
             transparent
             opacity={0.6}
             clippingPlanes={[clipPlane]}
