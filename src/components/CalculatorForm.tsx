@@ -8,20 +8,24 @@ import HorizontalBulletTank3D from "@/components/HorizontalBulletTank3D";
 import DataTableModals from "@/components/DataTableModals";
 import { getVolumeCorrectionFactor as getVCFTank1 } from "@/lib/volumeCorrection";
 import { getVolumeCorrectionFactor as getVCFTank2 } from "@/lib/volumeCorrectionTank2";
-import { heightCapacityData } from "@/components/TankGauge";
+import { heightCapacityDataTank1 } from "@/components/TankGauge";
+import { heightCapacityDataTank2 } from "@/data/tank2HeightCapacity";
 
-const getCapacityFromHeight = (heightMm: number): number => {
-  if (heightMm <= 0) return heightCapacityData[0];
-  const maxHeight = 2954;
-  if (heightMm >= maxHeight) return heightCapacityData[maxHeight];
+const getCapacityFromHeight = (
+  heightMm: number,
+  data: { [key: number]: number },
+  maxHeight: number
+): number => {
+  if (heightMm <= 0) return data[0];
+  if (heightMm >= maxHeight) return data[maxHeight];
 
   const lower = Math.floor(heightMm);
   const upper = Math.ceil(heightMm);
-  const lowerCap = heightCapacityData[lower];
-  const upperCap = heightCapacityData[upper];
+  const lowerCap = data[lower];
+  const upperCap = data[upper];
 
   if (lowerCap === undefined || upperCap === undefined) {
-    return heightCapacityData[lower] || 0;
+    return data[lower] || 0;
   }
 
   const ratio = heightMm - lower;
@@ -83,6 +87,9 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   const [results, setResults] = useState<CalculationResults | string | null>(null);
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(100);
+
+  const heightData = selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
+  const maxHeight = selectedTank === 'tank2' ? 2960 : 2954;
   
   // Modal states
   const [showShellFactors, setShowShellFactors] = useState(false);
@@ -96,11 +103,11 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
     if (field === 'heightMm' && typeof value === 'string') {
       const heightMm = parseFloat(value);
       if (!isNaN(heightMm)) {
-        const percentage = (heightMm / 2955) * 100; // Convert mm to percentage
+        const percentage = (heightMm / maxHeight) * 100; // Convert mm to percentage
         setHeightPercentage(Math.min(100, Math.max(0, percentage)));
 
         // Also update capacity based on height using interpolation data
-        setCapacity(getCapacityFromHeight(heightMm));
+        setCapacity(getCapacityFromHeight(heightMm, heightData, maxHeight));
       }
     }
   };
@@ -108,8 +115,9 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   const handleHeightChange = (height: number) => {
     setHeightPercentage(height);
     // Auto-sync height in mm based on percentage
-    const heightMm = (height / 100) * 2955; // Max height from tank specifications
+    const heightMm = (height / 100) * maxHeight; // Max height from tank specifications
     setFormData(prev => ({ ...prev, heightMm: heightMm.toString() }));
+    setCapacity(getCapacityFromHeight(heightMm, heightData, maxHeight));
   };
 
   const handleCapacityChange = (newCapacity: number) => {
@@ -356,6 +364,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
         showPressureFactors={showPressureFactors}
         showHeightCapacity={showHeightCapacity}
         onOpenChange={handleModalOpen}
+        selectedTank={selectedTank}
       />
     </div>
   );
