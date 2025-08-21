@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import HorizontalBulletTank3D from "@/components/HorizontalBulletTank3D";
 import DataTableModals from "@/components/DataTableModals";
-import { getVolumeCorrectionFactor } from "@/lib/volumeCorrection";
+import { getVolumeCorrectionFactor as getVCFTank1 } from "@/lib/volumeCorrection";
+import { getVolumeCorrectionFactor as getVCFTank2 } from "@/lib/volumeCorrectionTank2";
 import { heightCapacityData } from "@/components/TankGauge";
 
 const getCapacityFromHeight = (heightMm: number): number => {
@@ -117,7 +118,8 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
 
   // Volume correction factors (VCF) - using calibration table data
   const getVCF = (temperature: number, density: number) => {
-    return getVolumeCorrectionFactor(density, temperature);
+    const fn = selectedTank === 'tank2' ? getVCFTank2 : getVCFTank1;
+    return fn(density, temperature);
   };
 
   const handleCalculate = () => {
