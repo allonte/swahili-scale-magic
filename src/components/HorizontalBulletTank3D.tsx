@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Mesh, Plane, Vector3 } from 'three';
@@ -11,6 +11,8 @@ interface HorizontalBulletTank3DProps {
   heightPercentage: number;
   onHeightChange: (height: number) => void;
   onCapacityChange: (capacity: number) => void;
+  selectedTank: 'tank1' | 'tank2';
+  onTankChange: (tank: 'tank1' | 'tank2') => void;
 }
 
 const getCapacityFromHeight = (heightMm: number): number => {
@@ -145,8 +147,13 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
   );
 };
 
-const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityChange }: HorizontalBulletTank3DProps) => {
-  const [selectedTank, setSelectedTank] = useState("tank1");
+const HorizontalBulletTank3D = ({
+  heightPercentage,
+  onHeightChange,
+  onCapacityChange,
+  selectedTank,
+  onTankChange,
+}: HorizontalBulletTank3DProps) => {
 
   const handleSliderChange = (value: number[]) => {
     const newPercentage = value[0];
@@ -159,7 +166,7 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
   };
 
   const handleTankChange = (value: string) => {
-    if (value) setSelectedTank(value);
+    if (value) onTankChange(value);
   };
 
   // Calculate current height and capacity
