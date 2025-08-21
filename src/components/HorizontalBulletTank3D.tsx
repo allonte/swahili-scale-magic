@@ -15,7 +15,7 @@ interface HorizontalBulletTank3DProps {
 
 const getCapacityFromHeight = (heightMm: number): number => {
   if (heightMm <= 0) return heightCapacityData[0];
-  const maxHeight = 2954;
+  const maxHeight = 2422;
   if (heightMm >= maxHeight) return heightCapacityData[maxHeight];
 
   const lower = Math.floor(heightMm);
@@ -153,7 +153,7 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
     onHeightChange(newPercentage);
     
     // Calculate height in mm based on percentage
-    const heightMm = (newPercentage / 100) * 2955; // Max height from specifications
+    const heightMm = (newPercentage / 100) * 2422; // Max height from specifications
     const capacity = getCapacityFromHeight(heightMm);
     onCapacityChange(capacity);
   };
@@ -163,7 +163,7 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
   };
 
   // Calculate current height and capacity
-  const currentHeightMm = (heightPercentage / 100) * 2955;
+  const currentHeightMm = (heightPercentage / 100) * 2422;
   const currentCapacity = getCapacityFromHeight(currentHeightMm);
 
   return (
@@ -244,12 +244,12 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
           <div className="text-xs text-muted-foreground bg-muted/20 p-2 rounded">
             <div className="font-medium mb-1">Reference Levels:</div>
             <div className="grid grid-cols-2 gap-1">
-              <div>5% → 154.45 mm</div>
-              <div>10% → 308.90 mm</div>
-              <div>85% → 2625.65 mm</div>
-              <div>90% → 2780.1 mm</div>
-              <div>95% → 2934.55 mm</div>
-              <div>Max → 2955 mm</div>
+              <div>5% → 121.1 mm</div>
+              <div>10% → 242.2 mm</div>
+              <div>85% → 2058.7 mm</div>
+              <div>90% → 2179.8 mm</div>
+              <div>95% → 2300.9 mm</div>
+              <div>Max → 2422 mm</div>
             </div>
           </div>
         </div>

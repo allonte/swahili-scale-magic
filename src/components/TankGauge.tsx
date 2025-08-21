@@ -306,8 +306,8 @@ export const heightCapacityData: { [key: number]: number } = {
 
 // Convert height percentage (0-100) to millimeters and get capacity
 function getCapacityFromPercentage(percentage: number): number {
-  // Convert percentage to height in millimeters (0% = 0mm, 100% = 2954mm for full range)
-  const heightMM = Math.round((percentage / 100) * 2954);
+  // Convert percentage to height in millimeters (0% = 0mm, 100% = 2422mm for full range)
+  const heightMM = Math.round((percentage / 100) * 2422);
   return heightCapacityData[heightMM] || 202;
 }
 

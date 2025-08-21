@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/dialog";
 
 const specs = [
-  { label: "Tank", value: "Tank 01" },
+  { label: "Tank", value: "Tank 02" },
   { label: "Tank Owner", value: "Total Energies Uganda" },
   { label: "Location", value: "Jinja, Uganda" },
   { label: "Tank Description", value: "LPG Bullet Tank" },
-  { label: "Nominal Diameter", value: "2955 mm" },
+  { label: "Nominal Diameter", value: "2422 mm" },
   { label: "Cylinder Length", value: "15000 mm" },
   { label: "Tank Nominal Capacity", value: "98695 Liters" },
   { label: "Date of Calibration", value: "27/06/2025" },

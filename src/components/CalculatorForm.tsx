@@ -11,7 +11,7 @@ import { heightCapacityData } from "@/components/TankGauge";
 
 const getCapacityFromHeight = (heightMm: number): number => {
   if (heightMm <= 0) return heightCapacityData[0];
-  const maxHeight = 2954;
+  const maxHeight = 2422;
   if (heightMm >= maxHeight) return heightCapacityData[maxHeight];
 
   const lower = Math.floor(heightMm);
@@ -80,7 +80,7 @@ const CalculatorForm = () => {
     if (field === 'heightMm' && typeof value === 'string') {
       const heightMm = parseFloat(value);
       if (!isNaN(heightMm)) {
-        const percentage = (heightMm / 2955) * 100; // Convert mm to percentage
+        const percentage = (heightMm / 2422) * 100; // Convert mm to percentage
         setHeightPercentage(Math.min(100, Math.max(0, percentage)));
 
         // Also update capacity based on height using interpolation data
@@ -92,7 +92,7 @@ const CalculatorForm = () => {
   const handleHeightChange = (height: number) => {
     setHeightPercentage(height);
     // Auto-sync height in mm based on percentage
-    const heightMm = (height / 100) * 2955; // Max height from tank specifications
+    const heightMm = (height / 100) * 2422; // Max height from tank specifications
     setFormData(prev => ({ ...prev, heightMm: heightMm.toString() }));
   };
 

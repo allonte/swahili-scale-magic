@@ -154,13 +154,13 @@ const Tank3DGauge = ({ heightPercentage, onHeightChange, onCapacityChange }: Tan
     onHeightChange(newPercentage);
     
     // Calculate height in mm based on percentage
-    const heightMm = (newPercentage / 100) * 2954; // Max height from data
+    const heightMm = (newPercentage / 100) * 2422; // Max height from data
     const capacity = getCapacityFromHeight(heightMm);
     onCapacityChange(capacity);
   };
 
   // Calculate current height and capacity
-  const currentHeightMm = (heightPercentage / 100) * 2954;
+  const currentHeightMm = (heightPercentage / 100) * 2422;
   const currentCapacity = getCapacityFromHeight(currentHeightMm);
 
   return (

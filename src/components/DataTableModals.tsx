@@ -171,7 +171,7 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <strong>Tank:</strong> Tank 01
+                <strong>Tank:</strong> Tank 02
               </div>
               <div>
                 <strong>Tank Owner:</strong> Total Energies Uganda
@@ -183,7 +183,7 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
                 <strong>Tank Description:</strong> LPG Bullet Tank
               </div>
               <div>
-                <strong>Nominal Diameter:</strong> 2955 mm
+                <strong>Nominal Diameter:</strong> 2422 mm
               </div>
               <div>
                 <strong>Cylinder Length:</strong> 15000 mm

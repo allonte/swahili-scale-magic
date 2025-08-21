@@ -2,11 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const TankDescription = () => {
   const specifications = [
-    { label: "Tank", value: "Tank 01", label2: "Date of Calibration", value2: "27/06/2025" },
+    { label: "Tank", value: "Tank 02", label2: "Date of Calibration", value2: "27/06/2025" },
     { label: "Tank Owner", value: "Total Energies Uganda", label2: "Validity", value2: "10 Years" },
     { label: "Location", value: "Jinja, Uganda", label2: "Overall Uncertainty", value2: "+0.013%" },
     { label: "Tank Description", value: "LPG Bullet Tank", label2: "Method of Calibration", value2: "API MPMS CHAPTER 2" },
-    { label: "Nominal Diameter", value: "2955 mm", label2: "Tank calibrated by", value2: "Murban Engineering Limited" },
+    { label: "Nominal Diameter", value: "2422 mm", label2: "Tank calibrated by", value2: "Murban Engineering Limited" },
     { label: "Cylinder Length", value: "15000 mm", label2: "Certificate No.", value2: "20257001028TC-01" },
     { label: "Tank Nominal Capacity", value: "98695 Liters", label2: "", value2: "" },
   ];
@@ -42,14 +42,14 @@ const TankDescription = () => {
             </p>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="space-y-1">
-                <div><strong>5%:</strong> 154.45 mm</div>
-                <div><strong>10%:</strong> 308.90 mm</div>
-                <div><strong>85%:</strong> 2625.65 mm</div>
+                <div><strong>5%:</strong> 121.1 mm</div>
+                <div><strong>10%:</strong> 242.2 mm</div>
+                <div><strong>85%:</strong> 2058.7 mm</div>
               </div>
               <div className="space-y-1">
-                <div><strong>90%:</strong> 2780.1 mm</div>
-                <div><strong>95%:</strong> 2934.55 mm</div>
-                <div><strong>Max:</strong> 2955 mm</div>
+                <div><strong>90%:</strong> 2179.8 mm</div>
+                <div><strong>95%:</strong> 2300.9 mm</div>
+                <div><strong>Max:</strong> 2422 mm</div>
               </div>
             </div>
           </div>
