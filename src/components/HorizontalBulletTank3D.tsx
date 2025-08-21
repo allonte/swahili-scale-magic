@@ -1,9 +1,10 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Mesh, Plane, Vector3 } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { heightCapacityData } from "@/components/TankGauge";
 
 interface HorizontalBulletTank3DProps {
@@ -145,6 +146,8 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
 };
 
 const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityChange }: HorizontalBulletTank3DProps) => {
+  const [selectedTank, setSelectedTank] = useState("tank1");
+
   const handleSliderChange = (value: number[]) => {
     const newPercentage = value[0];
     onHeightChange(newPercentage);
@@ -153,6 +156,10 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
     const heightMm = (newPercentage / 100) * 2955; // Max height from specifications
     const capacity = getCapacityFromHeight(heightMm);
     onCapacityChange(capacity);
+  };
+
+  const handleTankChange = (value: string) => {
+    if (value) setSelectedTank(value);
   };
 
   // Calculate current height and capacity
@@ -165,6 +172,24 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
         <CardTitle>3D Horizontal Bullet Tank Gauge</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Tank selection */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Select Tank</label>
+          <ToggleGroup
+            type="single"
+            value={selectedTank}
+            onValueChange={handleTankChange}
+            className="w-full"
+          >
+            <ToggleGroupItem value="tank1" className="flex-1">
+              Tank One
+            </ToggleGroupItem>
+            <ToggleGroupItem value="tank2" className="flex-1">
+              Tank Two
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+
         {/* 3D Canvas */}
         <div className="h-80 w-full border rounded-lg bg-gradient-to-b from-background to-muted/20">
           <Canvas camera={{ position: [8, 4, 6], fov: 50 }} gl={{ localClippingEnabled: true }}>
