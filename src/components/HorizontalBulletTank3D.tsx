@@ -182,6 +182,24 @@ const HorizontalBulletTank3D = ({
   const currentHeightMm = (heightPercentage / 100) * maxHeight;
   const currentCapacity = getCapacityFromHeight(currentHeightMm, dataObj, maxHeight);
 
+  const referenceLevels = selectedTank === 'tank2'
+    ? [
+        { level: 5, height: 121.1 },
+        { level: 10, height: 242.2 },
+        { level: 85, height: 2058.7 },
+        { level: 90, height: 2179.8 },
+        { level: 95, height: 2300.9 },
+      ]
+    : [
+        { level: 5, height: 154.45 },
+        { level: 10, height: 308.9 },
+        { level: 85, height: 2625.65 },
+        { level: 90, height: 2780.1 },
+        { level: 95, height: 2934.55 },
+      ];
+
+  const displayMaxHeight = selectedTank === 'tank2' ? 2960 : 2955;
+
   return (
     <Card>
       <CardHeader>
@@ -260,12 +278,10 @@ const HorizontalBulletTank3D = ({
           <div className="text-xs text-muted-foreground bg-muted/20 p-2 rounded">
             <div className="font-medium mb-1">Reference Levels:</div>
             <div className="grid grid-cols-2 gap-1">
-              <div>5% → 154.45 mm</div>
-              <div>10% → 308.90 mm</div>
-              <div>85% → 2625.65 mm</div>
-              <div>90% → 2780.1 mm</div>
-              <div>95% → 2934.55 mm</div>
-              <div>Max → 2955 mm</div>
+              {referenceLevels.map(({ level, height }) => (
+                <div key={level}>{level}% → {height} mm</div>
+              ))}
+              <div>Max → {displayMaxHeight} mm</div>
             </div>
           </div>
         </div>

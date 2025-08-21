@@ -25,6 +25,23 @@ const tankSpecifications: Record<'tank1' | 'tank2', { label: string; value: stri
   ],
 };
 
+const referenceLevels: Record<'tank1' | 'tank2', { level: number; height: number }[]> = {
+  tank1: [
+    { level: 5, height: 154.45 },
+    { level: 10, height: 308.9 },
+    { level: 85, height: 2625.65 },
+    { level: 90, height: 2780.1 },
+    { level: 95, height: 2934.55 },
+  ],
+  tank2: [
+    { level: 5, height: 121.1 },
+    { level: 10, height: 242.2 },
+    { level: 85, height: 2058.7 },
+    { level: 90, height: 2179.8 },
+    { level: 95, height: 2300.9 },
+  ],
+};
+
 const TankDescription = ({ selectedTank }: TankDescriptionProps) => {
   const specifications = tankSpecifications[selectedTank];
 
@@ -57,18 +74,25 @@ const TankDescription = ({ selectedTank }: TankDescriptionProps) => {
               The percentage levels below are based on the total calibrated internal height of the tank, and for estimating product volume 
               relative to the tank's fill level during operations, inspections, or inventory management.
             </p>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="space-y-1">
-                <div><strong>5%:</strong> 154.45 mm</div>
-                <div><strong>10%:</strong> 308.90 mm</div>
-                <div><strong>85%:</strong> 2625.65 mm</div>
-              </div>
-              <div className="space-y-1">
-                <div><strong>90%:</strong> 2780.1 mm</div>
-                <div><strong>95%:</strong> 2934.55 mm</div>
-                <div><strong>Max:</strong> 2955 mm</div>
-              </div>
-            </div>
+            {(() => {
+              const levels = referenceLevels[selectedTank];
+              const maxHeight = selectedTank === 'tank2' ? 2960 : 2955;
+              return (
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="space-y-1">
+                    {levels.slice(0, 3).map(({ level, height }) => (
+                      <div key={level}><strong>{level}%:</strong> {height} mm</div>
+                    ))}
+                  </div>
+                  <div className="space-y-1">
+                    {levels.slice(3).map(({ level, height }) => (
+                      <div key={level}><strong>{level}%:</strong> {height} mm</div>
+                    ))}
+                    <div><strong>Max:</strong> {maxHeight} mm</div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
           
           <div className="border-t pt-4">

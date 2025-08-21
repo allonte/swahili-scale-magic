@@ -4,27 +4,32 @@ import { OrbitControls } from '@react-three/drei';
 import { Mesh, Plane, Vector3 } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
-import { heightCapacityData } from '@/components/TankGauge';
+import { heightCapacityDataTank1 } from '@/components/TankGauge';
+import { heightCapacityDataTank2 } from '@/data/tank2HeightCapacity';
 
 interface Tank3DProps {
   heightPercentage: number;
   onHeightChange: (height: number) => void;
   onCapacityChange: (capacity: number) => void;
+  selectedTank: 'tank1' | 'tank2';
 }
 
-// Interpolate capacity from height using heightCapacityData
-const getCapacityFromHeight = (heightMm: number): number => {
-  if (heightMm <= 0) return heightCapacityData[0];
-  const maxHeight = 2954;
-  if (heightMm >= maxHeight) return heightCapacityData[maxHeight];
+// Interpolate capacity from height using selected tank data
+const getCapacityFromHeight = (
+  heightMm: number,
+  data: { [key: number]: number },
+  maxHeight: number
+): number => {
+  if (heightMm <= 0) return data[0];
+  if (heightMm >= maxHeight) return data[maxHeight];
 
   const lower = Math.floor(heightMm);
   const upper = Math.ceil(heightMm);
-  const lowerCap = heightCapacityData[lower];
-  const upperCap = heightCapacityData[upper];
+  const lowerCap = data[lower];
+  const upperCap = data[upper];
 
   if (lowerCap === undefined || upperCap === undefined) {
-    return heightCapacityData[lower] || 0;
+    return data[lower] || 0;
   }
 
   const ratio = heightMm - lower;
@@ -105,18 +110,38 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
 };
 
 // 3D bullet tank gauge component
-const Tank3DGauge = ({ heightPercentage, onHeightChange, onCapacityChange }: Tank3DProps) => {
+const Tank3DGauge = ({ heightPercentage, onHeightChange, onCapacityChange, selectedTank }: Tank3DProps) => {
+  const dataObj = selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
+  const maxHeight = selectedTank === 'tank2' ? 2960 : 2954;
+  const displayMaxHeight = selectedTank === 'tank2' ? 2960 : 2955;
+
+  const referenceLevels = selectedTank === 'tank2'
+    ? [
+        { level: 5, height: 121.1 },
+        { level: 10, height: 242.2 },
+        { level: 85, height: 2058.7 },
+        { level: 90, height: 2179.8 },
+        { level: 95, height: 2300.9 },
+      ]
+    : [
+        { level: 5, height: 154.45 },
+        { level: 10, height: 308.9 },
+        { level: 85, height: 2625.65 },
+        { level: 90, height: 2780.1 },
+        { level: 95, height: 2934.55 },
+      ];
+
   const handleSliderChange = (value: number[]) => {
     const newPercentage = value[0];
     onHeightChange(newPercentage);
 
-    const heightMm = (newPercentage / 100) * 2955; // Max height from specifications
-    const capacity = getCapacityFromHeight(heightMm);
+    const heightMm = (newPercentage / 100) * maxHeight; // Max height from specifications
+    const capacity = getCapacityFromHeight(heightMm, dataObj, maxHeight);
     onCapacityChange(capacity);
   };
 
-  const currentHeightMm = (heightPercentage / 100) * 2955;
-  const currentCapacity = getCapacityFromHeight(currentHeightMm);
+  const currentHeightMm = (heightPercentage / 100) * maxHeight;
+  const currentCapacity = getCapacityFromHeight(currentHeightMm, dataObj, maxHeight);
 
   return (
     <Card>
@@ -173,12 +198,10 @@ const Tank3DGauge = ({ heightPercentage, onHeightChange, onCapacityChange }: Tan
           <div className="text-xs text-muted-foreground bg-muted/20 p-2 rounded">
             <div className="font-medium mb-1">Reference Levels:</div>
             <div className="grid grid-cols-2 gap-1">
-              <div>5% → 154.45 mm</div>
-              <div>10% → 308.90 mm</div>
-              <div>85% → 2625.65 mm</div>
-              <div>90% → 2780.1 mm</div>
-              <div>95% → 2934.55 mm</div>
-              <div>Max → 2955 mm</div>
+              {referenceLevels.map(({ level, height }) => (
+                <div key={level}>{level}% → {height} mm</div>
+              ))}
+              <div>Max → {displayMaxHeight} mm</div>
             </div>
           </div>
         </div>
