@@ -337,10 +337,10 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, onHeightChange,
         <div className="flex justify-center">
           <div className="relative">
             {/* Tank Outline */}
-            <div className="w-32 h-64 border-4 border-primary rounded-lg bg-secondary/20 relative overflow-hidden">
+            <div className="w-32 h-64 border-4 border-green-500 rounded-lg bg-secondary/20 relative overflow-hidden">
               {/* Liquid Level */}
-              <div 
-                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-primary to-primary/70 transition-all duration-300 ease-out"
+              <div
+                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-400 to-green-200 transition-all duration-300 ease-out"
                 style={{ height: `${heightPercentage}%` }}
               />
               {/* Percentage Labels */}

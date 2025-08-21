@@ -96,9 +96,9 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
       {fillLevel > 0 && (
         <mesh ref={liquidRef} position={[0, -tankRadius + liquidHeight/2, 0]}>
           <boxGeometry args={[tankLength, liquidHeight, tankRadius * 1.8]} />
-          <meshStandardMaterial 
-            color="hsl(var(--primary))" 
-            transparent 
+          <meshStandardMaterial
+            color="#bbf7d0"
+            transparent
             opacity={0.6}
           />
         </mesh>
@@ -111,14 +111,14 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
           <group key={level}>
             <mesh position={[-tankLength/2 - 0.2, indicatorY, 0]}>
               <boxGeometry args={[0.3, 0.05, 0.05]} />
-              <meshStandardMaterial 
-                color={Math.abs(level - fillLevel) < 5 ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} 
+              <meshStandardMaterial
+                color={Math.abs(level - fillLevel) < 5 ? "#4ade80" : "hsl(var(--muted-foreground))"}
               />
             </mesh>
             <mesh position={[tankLength/2 + 0.2, indicatorY, 0]}>
               <boxGeometry args={[0.3, 0.05, 0.05]} />
-              <meshStandardMaterial 
-                color={Math.abs(level - fillLevel) < 5 ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} 
+              <meshStandardMaterial
+                color={Math.abs(level - fillLevel) < 5 ? "#4ade80" : "hsl(var(--muted-foreground))"}
               />
             </mesh>
           </group>
@@ -131,8 +131,8 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         return (
           <mesh key={`text-${level}`} position={[-tankLength/2 - 0.5, indicatorY, 0]}>
             <boxGeometry args={[0.1, 0.1, 0.01]} />
-            <meshStandardMaterial 
-              color={Math.abs(level - fillLevel) < 5 ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"}
+            <meshStandardMaterial
+              color={Math.abs(level - fillLevel) < 5 ? "#4ade80" : "hsl(var(--muted-foreground))"}
               transparent
               opacity={0.8}
             />
