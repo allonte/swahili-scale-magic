@@ -4,7 +4,7 @@ import { Slider } from '@/components/ui/slider';
 
 // Height to capacity mapping based on tank measurements
 // Heights in MM mapped to capacities in L - Total Energies Uganda Tank Data
-const heightCapacityData: { [key: number]: number } = {
+export const heightCapacityData: { [key: number]: number } = {
   0: 202, 1: 214, 2: 226, 3: 237, 4: 249, 5: 261, 6: 273, 7: 285, 8: 296, 9: 308,
   10: 319, 11: 331, 12: 343, 13: 354, 14: 366, 15: 378, 16: 390, 17: 402, 18: 413, 19: 425,
   20: 437, 21: 449, 22: 461, 23: 472, 24: 484, 25: 496, 26: 508, 27: 520, 28: 531, 29: 543,
