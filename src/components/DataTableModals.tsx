@@ -7,6 +7,7 @@ interface DataTableModalsProps {
   showShellFactors: boolean;
   showPressureFactors: boolean;
   showHeightCapacity: boolean;
+  showVCFTable: boolean;
   onOpenChange: (type: string, open: boolean) => void;
   selectedTank: 'tank1' | 'tank2';
 }
@@ -128,7 +129,7 @@ const volumeCorrectionFactors = {
   ]
 };
 
-const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapacity, onOpenChange, selectedTank }: DataTableModalsProps) => {
+const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapacity, showVCFTable, onOpenChange, selectedTank }: DataTableModalsProps) => {
   const dataObj = selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
   const tankData: [number, number][] = Object.entries(dataObj).map(([height, capacity]) => [
     Number(height),
@@ -190,6 +191,40 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
                   <TableRow key={temp}>
                     <TableCell>{temp}</TableCell>
                     <TableCell>{factor.toFixed(6)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Product Temperature (VCF) Table Modal */}
+      <Dialog open={showVCFTable} onOpenChange={(open) => onOpenChange('vcf', open)}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle>Product Temperature (VCF) Table</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Volume correction factors based on density and temperature.
+            </p>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Temp (°C)</TableHead>
+                  {volumeCorrectionFactors.densities.map((d) => (
+                    <TableHead key={d}>{d.toFixed(3)}</TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {volumeCorrectionFactors.temperatures.map((temp, i) => (
+                  <TableRow key={temp}>
+                    <TableCell>{temp.toFixed(1)}</TableCell>
+                    {volumeCorrectionFactors.factors[i].map((factor, j) => (
+                      <TableCell key={j}>{factor.toFixed(3)}</TableCell>
+                    ))}
                   </TableRow>
                 ))}
               </TableBody>

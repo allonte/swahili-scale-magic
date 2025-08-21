@@ -39,8 +39,6 @@ interface FormData {
   height: string;
   heightMm: string;
   pressure: string;
-  applyPressureCorrection: boolean;
-  showVCFTable: boolean;
 }
 
 interface CalculatorFormProps {
@@ -66,8 +64,6 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
     height: "0",
     heightMm: "0",
     pressure: "17",
-    applyPressureCorrection: false,
-    showVCFTable: false,
   });
 
   // Pressure correction factors
@@ -95,6 +91,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   const [showShellFactors, setShowShellFactors] = useState(false);
   const [showPressureFactors, setShowPressureFactors] = useState(false);
   const [showHeightCapacity, setShowHeightCapacity] = useState(false);
+  const [showVCFTable, setShowVCFTable] = useState(false);
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -144,9 +141,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
       const scf = 1.000000; // Shell correction factor (simplified)
       
       // Calculate corrected volume
-      const correctedVolume = formData.applyPressureCorrection 
-        ? referenceVolume * vcf * pcf * scf
-        : referenceVolume * vcf * scf;
+      const correctedVolume = referenceVolume * vcf * pcf * scf;
       
       // Calculate mass
       const mass = correctedVolume * density;
@@ -173,12 +168,11 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
       height: "0",
       heightMm: "0",
       pressure: "17",
-      applyPressureCorrection: false,
-      showVCFTable: false,
     });
     setResults(null);
     setHeightPercentage(0);
     setCapacity(100);
+    setShowVCFTable(false);
   };
 
   const handleModalOpen = (type: string, open: boolean) => {
@@ -191,6 +185,9 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
         break;
       case 'height':
         setShowHeightCapacity(open);
+        break;
+      case 'vcf':
+        setShowVCFTable(open);
         break;
     }
   };
@@ -268,17 +265,9 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <Checkbox
-                id="pressureCorrection"
-                checked={formData.applyPressureCorrection}
-                onCheckedChange={(checked) => handleInputChange("applyPressureCorrection", checked as boolean)}
-              />
-              <Label htmlFor="pressureCorrection">Apply Pressure Correction</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
                 id="vcfTable"
-                checked={formData.showVCFTable}
-                onCheckedChange={(checked) => handleInputChange("showVCFTable", checked as boolean)}
+                checked={showVCFTable}
+                onCheckedChange={(checked) => setShowVCFTable(checked as boolean)}
               />
               <Label htmlFor="vcfTable">Show Product Temperature (VCF) table</Label>
             </div>
@@ -363,6 +352,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
         showShellFactors={showShellFactors}
         showPressureFactors={showPressureFactors}
         showHeightCapacity={showHeightCapacity}
+        showVCFTable={showVCFTable}
         onOpenChange={handleModalOpen}
         selectedTank={selectedTank}
       />
