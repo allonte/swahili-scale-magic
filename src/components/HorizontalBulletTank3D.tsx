@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { Mesh } from 'three';
+import { Mesh, Plane, Vector3 } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { heightCapacityData } from "@/components/TankGauge";
@@ -46,7 +46,9 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
   
   // Calculate liquid geometry for horizontal tank - fill from bottom up
   const liquidHeight = (fillLevel / 100) * (tankRadius * 2);
-  const liquidY = -tankRadius + liquidHeight / 2;
+  // Position clipping plane at the current liquid surface measured from the tank's base
+  const liquidSurface = -tankRadius + liquidHeight;
+  const clipPlane = new Plane(new Vector3(0, 1, 0), -liquidSurface);
 
   return (
     <group>
@@ -92,14 +94,15 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         />
       </mesh>
 
-      {/* Liquid inside - box geometry that fills from bottom */}
+      {/* Liquid inside - cylindrical geometry clipped at the fill level */}
       {fillLevel > 0 && (
-        <mesh ref={liquidRef} position={[0, -tankRadius + liquidHeight/2, 0]}>
-          <boxGeometry args={[tankLength, liquidHeight, tankRadius * 1.8]} />
+        <mesh ref={liquidRef} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[tankRadius * 0.99, tankRadius * 0.99, tankLength, 32]} />
           <meshStandardMaterial
-            color="#bbf7d0"
+            color="#22c55e"
             transparent
             opacity={0.6}
+            clippingPlanes={[clipPlane]}
           />
         </mesh>
       )}
@@ -167,7 +170,7 @@ const HorizontalBulletTank3D = ({ heightPercentage, onHeightChange, onCapacityCh
       <CardContent className="space-y-4">
         {/* 3D Canvas */}
         <div className="h-80 w-full border rounded-lg bg-gradient-to-b from-background to-muted/20">
-          <Canvas camera={{ position: [8, 4, 6], fov: 50 }}>
+          <Canvas camera={{ position: [8, 4, 6], fov: 50 }} gl={{ localClippingEnabled: true }}>
             <ambientLight intensity={0.6} />
             <pointLight position={[10, 10, 10]} intensity={1} />
             <directionalLight position={[-5, 10, 5]} intensity={0.8} />
