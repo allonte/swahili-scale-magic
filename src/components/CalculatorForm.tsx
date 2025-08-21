@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import HorizontalBulletTank3D from "@/components/HorizontalBulletTank3D";
 import DataTableModals from "@/components/DataTableModals";
 import { getVolumeCorrectionFactor } from "@/lib/volumeCorrection";
+import { getShellCorrectionFactorTank2 } from "@/lib/shellCorrection";
 import { heightCapacityData } from "@/components/TankGauge";
 
 const getCapacityFromHeight = (heightMm: number): number => {
@@ -38,6 +39,16 @@ interface FormData {
   showVCFTable: boolean;
 }
 
+interface CalculationResults {
+  referenceVolume: number;
+  vcf: number;
+  scf: number;
+  correctedVolume: number;
+  pcf: number;
+  density: number;
+  mass: number;
+}
+
 const CalculatorForm = () => {
   const [formData, setFormData] = useState<FormData>({
     productDensity: "0.55",
@@ -64,7 +75,7 @@ const CalculatorForm = () => {
     24: 1.000088,
   };
 
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<CalculationResults | null>(null);
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(100);
   
@@ -108,18 +119,19 @@ const CalculatorForm = () => {
   const handleCalculate = () => {
     const density = parseFloat(formData.productDensity);
     const productTemp = parseFloat(formData.productTemperature);
+    const shellTemp = parseFloat(formData.shellTemperature);
     const pressure = parseFloat(formData.pressure);
-    
-    if (capacity && density && !isNaN(productTemp) && !isNaN(pressure)) {
+
+    if (capacity && density && !isNaN(productTemp) && !isNaN(pressure) && !isNaN(shellTemp)) {
       const referenceVolume = capacity; // Volume in liters from gauge
-      
+
       // Get correction factors
       const vcf = getVCF(productTemp, density);
       const pcf = pressureCorrectionFactors[pressure as keyof typeof pressureCorrectionFactors] || 1.000000;
-      const scf = 1.000000; // Shell correction factor (simplified)
-      
+      const scf = getShellCorrectionFactorTank2(shellTemp);
+
       // Calculate corrected volume
-      const correctedVolume = formData.applyPressureCorrection 
+      const correctedVolume = formData.applyPressureCorrection
         ? referenceVolume * vcf * pcf * scf
         : referenceVolume * vcf * scf;
       

@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { heightCapacityData } from "./TankGauge";
+import { shellCorrectionFactorsTank2 } from "@/lib/shellCorrection";
 
 interface DataTableModalsProps {
   showShellFactors: boolean;
@@ -15,10 +16,9 @@ const tankData: [number, number][] = Object.entries(heightCapacityData).map(([he
   capacity as number,
 ]);
 
-const shellFactors = [
-  [15, 0.999890], [16, 0.999912], [17, 0.999934], [18, 0.999956], [19, 0.999978],
-  [20, 1.000000], [21, 1.000022], [22, 1.000044], [23, 1.000066], [24, 1.000088]
-];
+const shellFactors = Object.entries(shellCorrectionFactorsTank2).map(
+  ([temp, factor]) => [Number(temp), factor as number]
+);
 
 const pressureFactors = [
   [15, 0.999890], [16, 0.999912], [17, 0.999934], [18, 0.999956], [19, 0.999978],
@@ -106,7 +106,7 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
       <Dialog open={showShellFactors} onOpenChange={(open) => onOpenChange('shell', open)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-auto">
           <DialogHeader>
-            <DialogTitle>Shell Correction Factors</DialogTitle>
+            <DialogTitle>Shell Correction Factors (Tank 2)</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
