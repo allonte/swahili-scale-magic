@@ -7,6 +7,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import HorizontalBulletTank3D from "@/components/HorizontalBulletTank3D";
 import DataTableModals from "@/components/DataTableModals";
 import { getVolumeCorrectionFactor } from "@/lib/volumeCorrection";
+import { heightCapacityData } from "@/components/TankGauge";
+
+const getCapacityFromHeight = (heightMm: number): number => {
+  if (heightMm <= 0) return heightCapacityData[0];
+  const maxHeight = 2954;
+  if (heightMm >= maxHeight) return heightCapacityData[maxHeight];
+
+  const lower = Math.floor(heightMm);
+  const upper = Math.ceil(heightMm);
+  const lowerCap = heightCapacityData[lower];
+  const upperCap = heightCapacityData[upper];
+
+  if (lowerCap === undefined || upperCap === undefined) {
+    return heightCapacityData[lower] || 0;
+  }
+
+  const ratio = heightMm - lower;
+  return Math.round(lowerCap + (upperCap - lowerCap) * ratio);
+};
 
 interface FormData {
   productDensity: string;
@@ -63,13 +82,8 @@ const CalculatorForm = () => {
       if (!isNaN(heightMm)) {
         const percentage = (heightMm / 2955) * 100; // Convert mm to percentage
         setHeightPercentage(Math.min(100, Math.max(0, percentage)));
-        
-        // Also update capacity based on height
-        const getCapacityFromHeight = (heightMm: number): number => {
-          // Simplified capacity calculation - would use the full tank data interpolation
-          return Math.round((heightMm / 2955) * 98695); // Linear approximation using nominal capacity
-        };
-        
+
+        // Also update capacity based on height using interpolation data
         setCapacity(getCapacityFromHeight(heightMm));
       }
     }
