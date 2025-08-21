@@ -21,6 +21,39 @@ const pressureFactors = [
   [20, 1.000000], [21, 1.000022], [22, 1.000044], [23, 1.000066], [24, 1.000088]
 ];
 
+const tankDetails: Record<'tank1' | 'tank2', { label: string; value: string }[]> = {
+  tank1: [
+    { label: "Tank", value: "Tank 01" },
+    { label: "Tank Owner", value: "Total Energies Uganda" },
+    { label: "Location", value: "Jinja, Uganda" },
+    { label: "Tank Description", value: "LPG Bullet Tank" },
+    { label: "Nominal Diameter", value: "2955 mm" },
+    { label: "Cylinder Length", value: "15000 mm" },
+    { label: "Tank Nominal Capacity", value: "98,695 Liters" },
+    { label: "Date of Calibration", value: "27/06/2025" },
+    { label: "Validity", value: "10 Years" },
+    { label: "Overall Uncertainty", value: "+0.013%" },
+    { label: "Method of Calibration", value: "API MPMS CHAPTER 2" },
+    { label: "Tank calibrated by", value: "Murban Engineering Limited" },
+    { label: "Certificate No.", value: "20257001028TC-01" },
+  ],
+  tank2: [
+    { label: "Tank", value: "Tank 02" },
+    { label: "Tank Owner", value: "Total Energies Jinja." },
+    { label: "Location", value: "Jinja, Uganda" },
+    { label: "Tank Description", value: "LPG Bullet Tank" },
+    { label: "Nominal Diameter", value: "2422 mm" },
+    { label: "Cylinder Length", value: "15000 mm" },
+    { label: "Tank Nominal Capacity", value: "98,682 Liters" },
+    { label: "Date of Calibration", value: "29/06/2025" },
+    { label: "Validity", value: "10 Years" },
+    { label: "Overall Uncertainty", value: "+0.012%" },
+    { label: "Method of Calibration", value: "API MPMS CHAPTER 2" },
+    { label: "Tank calibrated by", value: "Murban Engineering Limited" },
+    { label: "Certificate No.", value: "20257001028TC-02" },
+  ],
+};
+
 const volumeCorrectionFactors = {
   densities: [0.500, 0.510, 0.520, 0.530, 0.540, 0.550, 0.560, 0.570, 0.580, 0.590],
   temperatures: [
@@ -101,6 +134,7 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
     Number(height),
     capacity as number,
   ]);
+  const description = tankDetails[selectedTank];
 
   return (
     <>
@@ -172,45 +206,11 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <strong>Tank:</strong> Tank 01
-              </div>
-              <div>
-                <strong>Tank Owner:</strong> Total Energies Uganda
-              </div>
-              <div>
-                <strong>Location:</strong> Jinja, Uganda
-              </div>
-              <div>
-                <strong>Tank Description:</strong> LPG Bullet Tank
-              </div>
-              <div>
-                <strong>Nominal Diameter:</strong> 2955 mm
-              </div>
-              <div>
-                <strong>Cylinder Length:</strong> 15000 mm
-              </div>
-              <div>
-                <strong>Tank Nominal Capacity:</strong> 98,695 Liters
-              </div>
-              <div>
-                <strong>Date of Calibration:</strong> 27/06/2025
-              </div>
-              <div>
-                <strong>Validity:</strong> 10 Years
-              </div>
-              <div>
-                <strong>Overall Uncertainty:</strong> +0.013%
-              </div>
-              <div>
-                <strong>Method of Calibration:</strong> API MPMS CHAPTER 2
-              </div>
-              <div>
-                <strong>Tank calibrated by:</strong> Murban Engineering Limited
-              </div>
-              <div>
-                <strong>Certificate No.:</strong> 20257001028TC-01
-              </div>
+              {description.map((item, index) => (
+                <div key={index}>
+                  <strong>{item.label}:</strong> {item.value}
+                </div>
+              ))}
             </div>
             <Table>
               <TableHeader>
