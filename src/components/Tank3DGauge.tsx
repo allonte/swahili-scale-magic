@@ -54,6 +54,14 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
   const liquidHeight = (fillLevel / 100) * (tankRadius * 2);
   const clipPlane = new Plane(new Vector3(0, -1, 0), -tankRadius + liquidHeight);
 
+  // Dimensions for the platform and supports
+  const supportHeight = 1;
+  const baseThickness = 0.2;
+  const baseWidth = 2.5;
+  const baseLength = tankLength + 2;
+  const baseY = -tankRadius - supportHeight - baseThickness / 2;
+  const standY = baseY + baseThickness / 2 + supportHeight / 2;
+
   return (
     <group>
       {/* Cylindrical body */}
@@ -84,6 +92,40 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
           />
         </mesh>
       )}
+
+      {/* Support stands */}
+      <mesh position={[-tankLength / 4, standY, 0]}>
+        <boxGeometry args={[1.5, supportHeight, baseWidth]} />
+        <meshStandardMaterial color="hsl(var(--background))" />
+      </mesh>
+      <mesh position={[tankLength / 4, standY, 0]}>
+        <boxGeometry args={[1.5, supportHeight, baseWidth]} />
+        <meshStandardMaterial color="hsl(var(--background))" />
+      </mesh>
+
+      {/* Base frame */}
+      <mesh position={[0, baseY, baseWidth / 2]}>
+        <boxGeometry args={[baseLength, baseThickness, 0.2]} />
+        <meshStandardMaterial color="hsl(var(--background))" />
+      </mesh>
+      <mesh position={[0, baseY, -baseWidth / 2]}>
+        <boxGeometry args={[baseLength, baseThickness, 0.2]} />
+        <meshStandardMaterial color="hsl(var(--background))" />
+      </mesh>
+      {[-baseLength / 2 + 0.5, 0, baseLength / 2 - 0.5].map((x) => (
+        <mesh key={x} position={[x, baseY, 0]}>
+          <boxGeometry args={[0.2, baseThickness, baseWidth]} />
+          <meshStandardMaterial color="hsl(var(--background))" />
+        </mesh>
+      ))}
+
+      {/* Top pipes */}
+      {[-tankLength / 4, 0, tankLength / 4].map((x) => (
+        <mesh key={x} position={[x, tankRadius + 0.4, 0]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.5, 16]} />
+          <meshStandardMaterial color="hsl(var(--background))" />
+        </mesh>
+      ))}
 
       {/* Level indicators */}
       {[5, 10, 85, 90, 95].map((level) => {
