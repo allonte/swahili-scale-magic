@@ -38,7 +38,22 @@ interface FormData {
   showVCFTable: boolean;
 }
 
-const CalculatorForm = () => {
+interface CalculatorFormProps {
+  selectedTank: 'tank1' | 'tank2';
+  onTankChange: (tank: 'tank1' | 'tank2') => void;
+}
+
+interface CalculationResults {
+  referenceVolume: number;
+  vcf: number;
+  scf: number;
+  correctedVolume: number;
+  pcf: number;
+  density: number;
+  mass: number;
+}
+
+const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => {
   const [formData, setFormData] = useState<FormData>({
     productDensity: "0.55",
     productTemperature: "20",
@@ -64,7 +79,7 @@ const CalculatorForm = () => {
     24: 1.000088,
   };
 
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<CalculationResults | string | null>(null);
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(100);
   
@@ -176,6 +191,8 @@ const CalculatorForm = () => {
         heightPercentage={heightPercentage}
         onHeightChange={handleHeightChange}
         onCapacityChange={handleCapacityChange}
+        selectedTank={selectedTank}
+        onTankChange={onTankChange}
       />
       
       <Card>
