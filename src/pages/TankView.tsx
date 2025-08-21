@@ -5,7 +5,6 @@ const TankView = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <h1 className="text-3xl font-bold text-foreground mb-4">Tank view</h1>
         <div className="relative">
           <img
             src="/tank1.jpg"
