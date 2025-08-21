@@ -319,13 +319,17 @@ interface TankGaugeProps {
 
 const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, onHeightChange, onCapacityChange }) => {
   const capacity = getCapacityFromPercentage(heightPercentage);
-  
+
   const handleSliderChange = (values: number[]) => {
     const newHeight = values[0];
     const newCapacity = getCapacityFromPercentage(newHeight);
     onHeightChange(newHeight);
     onCapacityChange(newCapacity);
   };
+
+  // Ensure the displayed fill level remains within valid bounds so the
+  // liquid animation always rises from the bottom of the gauge.
+  const fillHeight = Math.max(0, Math.min(100, heightPercentage));
 
   return (
     <Card className="w-full">
@@ -341,7 +345,7 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, onHeightChange,
               {/* Liquid Level */}
               <div
                 className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-400 to-green-200 transition-all duration-300 ease-out"
-                style={{ height: `${heightPercentage}%` }}
+                style={{ height: `${fillHeight}%` }}
               />
               {/* Percentage Labels */}
               <div className="absolute inset-0 flex flex-col justify-between py-2 px-1">
@@ -350,14 +354,14 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, onHeightChange,
                 <div className="text-xs font-bold text-foreground/70">0%</div>
               </div>
             </div>
-            
+
             {/* Current Level Indicator */}
-            <div 
+            <div
               className="absolute right-0 w-6 h-1 bg-accent border border-accent-foreground rounded-r transform -translate-y-1/2 transition-all duration-300"
-              style={{ bottom: `${heightPercentage}%` }}
+              style={{ bottom: `${fillHeight}%` }}
             >
               <div className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-background border border-accent-foreground rounded px-2 py-1 text-xs font-bold whitespace-nowrap">
-                {heightPercentage}%
+                {fillHeight}%
               </div>
             </div>
           </div>
