@@ -1,19 +1,15 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { heightCapacityData } from "./TankGauge";
+import { heightCapacityDataTank1 } from "./TankGauge";
+import { heightCapacityDataTank2 } from "@/data/tank2HeightCapacity";
 
 interface DataTableModalsProps {
   showShellFactors: boolean;
   showPressureFactors: boolean;
   showHeightCapacity: boolean;
   onOpenChange: (type: string, open: boolean) => void;
+  selectedTank: 'tank1' | 'tank2';
 }
-
-
-const tankData: [number, number][] = Object.entries(heightCapacityData).map(([height, capacity]) => [
-  Number(height),
-  capacity as number,
-]);
 
 const shellFactors = [
   [15, 0.999890], [16, 0.999912], [17, 0.999934], [18, 0.999956], [19, 0.999978],
@@ -99,7 +95,13 @@ const volumeCorrectionFactors = {
   ]
 };
 
-const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapacity, onOpenChange }: DataTableModalsProps) => {
+const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapacity, onOpenChange, selectedTank }: DataTableModalsProps) => {
+  const dataObj = selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
+  const tankData: [number, number][] = Object.entries(dataObj).map(([height, capacity]) => [
+    Number(height),
+    capacity as number,
+  ]);
+
   return (
     <>
       {/* Shell Correction Factors Modal */}
