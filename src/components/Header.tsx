@@ -5,9 +5,11 @@ const Header = () => {
     <header className="bg-card border-b border-border px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">M</span>
-          </div>
+          <img
+            src="/murbanlogo.jpg"
+            alt="Murban logo"
+            className="w-8 h-8 object-cover rounded"
+          />
           <span className="font-semibold text-foreground">Total Energies Uganda</span>
         </div>
         <div className="flex items-center gap-4">
