@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Text } from '@react-three/drei';
 import { Mesh, Plane, Vector3 } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -37,25 +37,26 @@ const getCapacityFromHeight = (
   return Math.round(lowerCap + (upperCap - lowerCap) * ratio);
 };
 
-const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
+const BulletTankMesh = ({ fillLevel, capacity }: { fillLevel: number; capacity: number }) => {
   const tankRef = useRef<Mesh>(null);
   const liquidRef = useRef<Mesh>(null);
+  const tankLength = 8;
+  const tankRadius = 1.2;
+  const hemisphereRadius = tankRadius;
+  const currentFill = useRef(fillLevel);
+  const clipPlane = useRef(
+    new Plane(new Vector3(0, -1, 0), -tankRadius + (fillLevel / 100) * (tankRadius * 2))
+  );
 
   useFrame((state) => {
     if (tankRef.current) {
       tankRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.1) * 0.02;
     }
+    // Smoothly animate liquid level toward target fill level
+    currentFill.current += (fillLevel - currentFill.current) * 0.1;
+    const liquidHeight = (currentFill.current / 100) * (tankRadius * 2);
+    clipPlane.current.constant = -tankRadius + liquidHeight;
   });
-
-  const tankLength = 8;
-  const tankRadius = 1.2;
-  const hemisphereRadius = tankRadius;
-
-  // Calculate liquid geometry for horizontal tank - fill from bottom up
-  const liquidHeight = (fillLevel / 100) * (tankRadius * 2);
-  // Move a clipping plane from the bottom (-tankRadius) to the top (+tankRadius)
-  // so that increasing the fill level reveals more liquid from the bottom up.
-  const clipPlane = new Plane(new Vector3(0, -1, 0), -tankRadius + liquidHeight);
 
   return (
     <group>
@@ -90,14 +91,6 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         />
       </mesh>
 
-      {/* Support bars at edges */}
-      {[-tankLength / 2, tankLength / 2].map((x, idx) => (
-        <mesh key={`support-${idx}`} position={[x, -tankRadius - 0.4, 0]}>
-          <boxGeometry args={[0.2, 0.8, 0.2]} />
-          <meshStandardMaterial color="hsl(var(--muted-foreground))" />
-        </mesh>
-      ))}
-
       {/* Liquid inside - cylindrical geometry clipped at the fill level */}
       {fillLevel > 0 && (
         <mesh ref={liquidRef} rotation={[0, 0, Math.PI / 2]}>
@@ -106,7 +99,7 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
             color="#bbf7d0"
             transparent
             opacity={0.6}
-            clippingPlanes={[clipPlane]}
+            clippingPlanes={[clipPlane.current]}
           />
         </mesh>
       )}
@@ -147,6 +140,16 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         );
       })}
 
+      {/* Capacity and percentage label */}
+      <Text
+        position={[0, tankRadius + 1.5, 0]}
+        fontSize={0.5}
+        color="white"
+        anchorX="center"
+        anchorY="middle"
+      >
+        {`${capacity.toLocaleString()} L (${fillLevel.toFixed(1)}%)`}
+      </Text>
     </group>
   );
 };
@@ -210,7 +213,7 @@ const HorizontalBulletTank3D = ({
             <pointLight position={[10, 10, 10]} intensity={1} />
             <directionalLight position={[-5, 10, 5]} intensity={0.8} />
             <directionalLight position={[5, -5, -5]} intensity={0.3} />
-            <BulletTankMesh fillLevel={heightPercentage} />
+            <BulletTankMesh fillLevel={heightPercentage} capacity={currentCapacity} />
             <OrbitControls
               enablePan={false}
               enableZoom={true}
