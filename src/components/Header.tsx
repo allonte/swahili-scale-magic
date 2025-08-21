@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import AboutCalibrationDialog from "./AboutCalibrationDialog";
+import HelpDialog from "./HelpDialog";
 
 const Header = () => {
   return (
@@ -14,7 +14,7 @@ const Header = () => {
           <span className="font-semibold text-foreground">Total Energies Uganda</span>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm">Help</Button>
+          <HelpDialog />
           <AboutCalibrationDialog />
         </div>
       </div>
