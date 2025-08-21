@@ -10,7 +10,7 @@ const Header = () => {
           <img
             src="/murbanlogo.jpg"
             alt="Murban logo"
-             className="w-12 h-12 object-cover rounded"
+            className="w-9 h-9 object-cover rounded"
             className="w-13 h-13 object-contain"
           />
           <span className="font-semibold text-foreground">Total Energies Uganda</span>
