@@ -14,12 +14,14 @@ const Header = () => {
           />
           <span className="font-semibold text-foreground">Total Energies Uganda</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-4">
+            <AboutCalibrationDialog />
+            <HelpDialog />
+          </div>
           <Link to="/tank-view" className="text-sm font-medium text-foreground hover:text-primary">
             Tank view
           </Link>
-          <HelpDialog />
-          <AboutCalibrationDialog />
         </div>
       </div>
     </header>
