@@ -83,8 +83,18 @@ const BulletTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         />
       </mesh>
 
-        {/* Wireframe removed to avoid crisscrossed appearance */}
-        {/* Support bars at edges */}
+      {/* Tank outline wireframe */}
+      <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[tankRadius, tankRadius, tankLength, 32]} />
+        <meshStandardMaterial
+          color="hsl(var(--border))"
+          transparent
+          opacity={0.4}
+          wireframe
+        />
+      </mesh>
+
+      {/* Support bars at edges */}
       {[-tankLength / 2, tankLength / 2].map((x, idx) => (
         <mesh key={`support-${idx}`} position={[x, -tankRadius - 0.4, 0]}>
           <boxGeometry args={[0.2, 0.8, 0.2]} />
