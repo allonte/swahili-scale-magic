@@ -1,5 +1,6 @@
 import AboutCalibrationDialog from "./AboutCalibrationDialog";
 import HelpDialog from "./HelpDialog";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -14,6 +15,9 @@ const Header = () => {
           <span className="font-semibold text-foreground">Total Energies Uganda</span>
         </div>
         <div className="flex items-center gap-4">
+          <Link to="/tank-view" className="text-sm font-medium text-foreground hover:text-primary">
+            Tank view
+          </Link>
           <HelpDialog />
           <AboutCalibrationDialog />
         </div>
