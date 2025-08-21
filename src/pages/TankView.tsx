@@ -8,7 +8,7 @@ const TankView = () => {
         <h1 className="text-3xl font-bold text-foreground mb-4">Tank view</h1>
         <div className="relative">
           <img
-            src="/uganda%20tank1.jpg"
+            src={encodeURI("/uganda tank1.jpg")}
             alt="Tank view"
             className="w-full rounded-lg"
           />
