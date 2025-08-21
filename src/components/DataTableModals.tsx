@@ -1,19 +1,23 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { heightCapacityData } from "./TankGauge";
+import { heightCapacityData as heightCapacityDataTank1 } from "./TankGauge";
+import { heightCapacityDataTank2 } from "@/data/tank2HeightCapacity";
 
 interface DataTableModalsProps {
   showShellFactors: boolean;
   showPressureFactors: boolean;
   showHeightCapacity: boolean;
   onOpenChange: (type: string, open: boolean) => void;
+  selectedTank: 'tank1' | 'tank2';
 }
 
-
-const tankData: [number, number][] = Object.entries(heightCapacityData).map(([height, capacity]) => [
-  Number(height),
-  capacity as number,
-]);
+const getTankData = (tank: 'tank1' | 'tank2'): [number, number][] => {
+  const data = tank === 'tank1' ? heightCapacityDataTank1 : heightCapacityDataTank2;
+  return Object.entries(data).map(([height, capacity]) => [
+    Number(height),
+    capacity as number,
+  ]);
+};
 
 const shellFactors = [
   [15, 0.999890], [16, 0.999912], [17, 0.999934], [18, 0.999956], [19, 0.999978],
@@ -99,7 +103,19 @@ const volumeCorrectionFactors = {
   ]
 };
 
-const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapacity, onOpenChange }: DataTableModalsProps) => {
+const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapacity, onOpenChange, selectedTank }: DataTableModalsProps) => {
+  const tankData = getTankData(selectedTank);
+  const tankInfo = selectedTank === 'tank1'
+    ? {
+        tank: 'Tank 01',
+        owner: 'Total Energies Uganda',
+        capacity: '98,695 Liters'
+      }
+    : {
+        tank: 'Tank 02',
+        owner: 'Total Energies Jinja',
+        capacity: '98,644 Liters'
+      };
   return (
     <>
       {/* Shell Correction Factors Modal */}
@@ -171,10 +187,10 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <strong>Tank:</strong> Tank 01
+                <strong>Tank:</strong> {tankInfo.tank}
               </div>
               <div>
-                <strong>Tank Owner:</strong> Total Energies Uganda
+                <strong>Tank Owner:</strong> {tankInfo.owner}
               </div>
               <div>
                 <strong>Location:</strong> Jinja, Uganda
@@ -189,7 +205,7 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
                 <strong>Cylinder Length:</strong> 15000 mm
               </div>
               <div>
-                <strong>Tank Nominal Capacity:</strong> 98,695 Liters
+                <strong>Tank Nominal Capacity:</strong> {tankInfo.capacity}
               </div>
               <div>
                 <strong>Date of Calibration:</strong> 27/06/2025

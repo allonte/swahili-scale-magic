@@ -5,7 +5,8 @@ import { Mesh, Plane, Vector3 } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { heightCapacityData } from "@/components/TankGauge";
+import { heightCapacityData as heightCapacityDataTank1 } from "@/components/TankGauge";
+import { heightCapacityDataTank2 } from "@/data/tank2HeightCapacity";
 
 interface HorizontalBulletTank3DProps {
   heightPercentage: number;
@@ -15,18 +16,21 @@ interface HorizontalBulletTank3DProps {
   onTankChange: (tank: 'tank1' | 'tank2') => void;
 }
 
-const getCapacityFromHeight = (heightMm: number): number => {
-  if (heightMm <= 0) return heightCapacityData[0];
+const getCapacityFromHeight = (
+  heightMm: number,
+  data: { [key: number]: number }
+): number => {
+  if (heightMm <= 0) return data[0];
   const maxHeight = 2954;
-  if (heightMm >= maxHeight) return heightCapacityData[maxHeight];
+  if (heightMm >= maxHeight) return data[maxHeight];
 
   const lower = Math.floor(heightMm);
   const upper = Math.ceil(heightMm);
-  const lowerCap = heightCapacityData[lower];
-  const upperCap = heightCapacityData[upper];
+  const lowerCap = data[lower];
+  const upperCap = data[upper];
 
   if (lowerCap === undefined || upperCap === undefined) {
-    return heightCapacityData[lower] || 0;
+    return data[lower] || 0;
   }
 
   const ratio = heightMm - lower;
@@ -158,10 +162,13 @@ const HorizontalBulletTank3D = ({
   const handleSliderChange = (value: number[]) => {
     const newPercentage = value[0];
     onHeightChange(newPercentage);
-    
+
+    const data =
+      selectedTank === "tank1" ? heightCapacityDataTank1 : heightCapacityDataTank2;
+
     // Calculate height in mm based on percentage
     const heightMm = (newPercentage / 100) * 2955; // Max height from specifications
-    const capacity = getCapacityFromHeight(heightMm);
+    const capacity = getCapacityFromHeight(heightMm, data);
     onCapacityChange(capacity);
   };
 
@@ -170,8 +177,10 @@ const HorizontalBulletTank3D = ({
   };
 
   // Calculate current height and capacity
+  const data =
+    selectedTank === "tank1" ? heightCapacityDataTank1 : heightCapacityDataTank2;
   const currentHeightMm = (heightPercentage / 100) * 2955;
-  const currentCapacity = getCapacityFromHeight(currentHeightMm);
+  const currentCapacity = getCapacityFromHeight(currentHeightMm, data);
 
   return (
     <Card>
