@@ -7,7 +7,7 @@ const TankView = () => {
       <main className="max-w-7xl mx-auto px-6 py-8">
         <h1 className="text-3xl font-bold text-foreground mb-4">Tank view</h1>
         <img
-          src="/uganda%20tank%201.jpg"
+          src={`${import.meta.env.BASE_URL}uganda%20tank%201.jpg`}
           alt="Tank view"
           className="w-full rounded-lg"
         />
