@@ -12,7 +12,7 @@ const Header = () => {
             alt="Murban logo"
             className="w-16 h-16 object-contain rounded"
           />
-          <span className="font-bold text-foreground">Murban</span>
+          <span className="font-bold text-foreground">Murban limited</span>
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="flex items-center gap-4">
