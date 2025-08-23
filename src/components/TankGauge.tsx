@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
+import { getHeightFromPercentage, percentageHeightData } from '@/data/percentageHeightMapping';
+import { heightCapacityDataTank2 } from '@/data/tank2HeightCapacity';
 
 // Height to capacity mapping based on tank measurements
 // Heights in MM mapped to capacities in L - Total Energies Uganda Tank Data
@@ -304,24 +306,28 @@ export const heightCapacityDataTank1: { [key: number]: number } = {
   2950: 98696, 2951: 98701, 2952: 98706, 2953: 98711, 2954: 98716
 };
 
-// Maximum calibrated height of tank in millimeters
-const MAX_HEIGHT_MM = 2954;
-
 // Convert height percentage (0-100) to millimeters and estimate capacity
 // using interpolation between points in the height-capacity chart
-function getCapacityFromPercentage(percentage: number): number {
-  const heightMM = (percentage / 100) * MAX_HEIGHT_MM;
+function getCapacityFromPercentage(
+  percentage: number,
+  tank: 'tank1' | 'tank2'
+): number {
+  const heightMM = getHeightFromPercentage(percentage, tank);
+  const dataObj = tank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
+  const maxHeight = percentageHeightData[tank][
+    percentageHeightData[tank].length - 1
+  ].height;
 
-  if (heightMM <= 0) return heightCapacityDataTank1[0];
-  if (heightMM >= MAX_HEIGHT_MM) return heightCapacityDataTank1[MAX_HEIGHT_MM];
+  if (heightMM <= 0) return dataObj[0];
+  if (heightMM >= maxHeight) return dataObj[maxHeight];
 
   const lower = Math.floor(heightMM);
   const upper = Math.ceil(heightMM);
-  const lowerCap = heightCapacityDataTank1[lower];
-  const upperCap = heightCapacityDataTank1[upper];
+  const lowerCap = dataObj[lower];
+  const upperCap = dataObj[upper];
 
   if (lowerCap === undefined || upperCap === undefined) {
-    return heightCapacityDataTank1[lower] || heightCapacityDataTank1[0];
+    return dataObj[lower] || dataObj[0];
   }
 
   const ratio = heightMM - lower;
@@ -332,14 +338,21 @@ interface TankGaugeProps {
   heightPercentage: number;
   onHeightChange: (height: number) => void;
   onCapacityChange: (capacity: number) => void;
+  tank: 'tank1' | 'tank2';
 }
 
-const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, onHeightChange, onCapacityChange }) => {
-  const capacity = getCapacityFromPercentage(heightPercentage);
+const TankGauge: React.FC<TankGaugeProps> = ({
+  heightPercentage,
+  onHeightChange,
+  onCapacityChange,
+  tank,
+}) => {
+  const capacity = getCapacityFromPercentage(heightPercentage, tank);
+  const heightMm = getHeightFromPercentage(heightPercentage, tank);
 
   const handleSliderChange = (values: number[]) => {
     const newHeight = values[0];
-    const newCapacity = getCapacityFromPercentage(newHeight);
+    const newCapacity = getCapacityFromPercentage(newHeight, tank);
     onHeightChange(newHeight);
     onCapacityChange(newCapacity);
   };
@@ -402,10 +415,14 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, onHeightChange,
         </div>
 
         {/* Display Values */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div className="text-center p-4 bg-secondary/20 rounded-lg border">
             <div className="text-2xl font-bold text-primary">{heightPercentage}%</div>
-            <div className="text-sm text-muted-foreground">Height</div>
+            <div className="text-sm text-muted-foreground">Height (%)</div>
+          </div>
+          <div className="text-center p-4 bg-secondary/20 rounded-lg border">
+            <div className="text-2xl font-bold text-primary">{heightMm.toFixed(2)}</div>
+            <div className="text-sm text-muted-foreground">Height (mm)</div>
           </div>
           <div className="text-center p-4 bg-secondary/20 rounded-lg border">
             <div className="text-2xl font-bold text-primary">{capacity.toLocaleString()}</div>

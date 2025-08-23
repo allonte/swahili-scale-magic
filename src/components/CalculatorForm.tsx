@@ -10,6 +10,11 @@ import { getVolumeCorrectionFactor as getVCFTank1 } from "@/lib/volumeCorrection
 import { getVolumeCorrectionFactor as getVCFTank2 } from "@/lib/volumeCorrectionTank2";
 import { heightCapacityDataTank1 } from "@/components/TankGauge";
 import { heightCapacityDataTank2 } from "@/data/tank2HeightCapacity";
+import {
+  getHeightFromPercentage,
+  getPercentageFromHeight,
+  percentageHeightData,
+} from "@/data/percentageHeightMapping";
 
 const getCapacityFromHeight = (
   heightMm: number,
@@ -84,8 +89,12 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   const [heightPercentage, setHeightPercentage] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(100);
 
-  const heightData = selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
-  const maxHeight = selectedTank === 'tank2' ? 2960 : 2954;
+  const heightData =
+    selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
+  const maxHeight =
+    percentageHeightData[selectedTank][
+      percentageHeightData[selectedTank].length - 1
+    ].height;
   
   // Modal states
   const [showShellFactors, setShowShellFactors] = useState(false);
@@ -100,10 +109,9 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
     if (field === 'heightMm' && typeof value === 'string') {
       const heightMm = parseFloat(value);
       if (!isNaN(heightMm)) {
-        const percentage = (heightMm / maxHeight) * 100; // Convert mm to percentage
+        const percentage = getPercentageFromHeight(heightMm, selectedTank);
         setHeightPercentage(Math.min(100, Math.max(0, percentage)));
 
-        // Also update capacity based on height using interpolation data
         setCapacity(getCapacityFromHeight(heightMm, heightData, maxHeight));
       }
     }
@@ -112,8 +120,8 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   const handleHeightChange = (height: number) => {
     setHeightPercentage(height);
     // Auto-sync height in mm based on percentage
-    const heightMm = (height / 100) * maxHeight; // Max height from tank specifications
-    setFormData(prev => ({ ...prev, heightMm: heightMm.toString() }));
+    const heightMm = getHeightFromPercentage(height, selectedTank);
+    setFormData((prev) => ({ ...prev, heightMm: heightMm.toString() }));
     setCapacity(getCapacityFromHeight(heightMm, heightData, maxHeight));
   };
 
