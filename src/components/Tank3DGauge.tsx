@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { Group, Mesh } from 'three';
+import { Group } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { heightCapacityDataTank1 } from '@/components/TankGauge';
@@ -39,7 +39,7 @@ const getCapacityFromHeight = (
 // Circular tank mesh rendered in the 3D scene
 const CircularTankMesh = ({ fillLevel }: { fillLevel: number }) => {
   const tankRef = useRef<Group>(null);
-  const liquidRef = useRef<Mesh>(null);
+  const liquidRef = useRef<Group>(null);
   const tankRadius = 1.2;
   const cylinderLength = 6;
   const tankHeight = tankRadius * 2;
@@ -64,22 +64,40 @@ const CircularTankMesh = ({ fillLevel }: { fillLevel: number }) => {
       <group rotation={[0, 0, Math.PI / 2]}>
         {/* Tank body */}
         <mesh>
-          <capsuleGeometry args={[tankRadius, cylinderLength, 16, 32]} />
+          <cylinderGeometry args={[tankRadius, tankRadius, cylinderLength, 32]} />
+          <meshStandardMaterial color="hsl(var(--background))" />
+        </mesh>
+        <mesh position={[0, cylinderLength / 2, 0]}>
+          <sphereGeometry args={[tankRadius, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <meshStandardMaterial color="hsl(var(--background))" />
+        </mesh>
+        <mesh position={[0, -cylinderLength / 2, 0]} rotation={[Math.PI, 0, 0]}>
+          <sphereGeometry args={[tankRadius, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
           <meshStandardMaterial color="hsl(var(--background))" />
         </mesh>
 
         {/* Liquid */}
         {fillLevel > 0 && (
-          <mesh ref={liquidRef} position={[-tankHeight / 2, 0, 0]} scale={[0, 1, 1]}>
-            <capsuleGeometry args={[tankRadius * 0.99, cylinderLength, 16, 32]} />
-            <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
-          </mesh>
+          <group ref={liquidRef} position={[-tankHeight / 2, 0, 0]} scale={[0, 1, 1]}>
+            <mesh>
+              <cylinderGeometry args={[tankRadius * 0.99, tankRadius * 0.99, cylinderLength, 32]} />
+              <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
+            </mesh>
+            <mesh position={[0, cylinderLength / 2, 0]}>
+              <sphereGeometry args={[tankRadius * 0.99, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+              <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
+            </mesh>
+            <mesh position={[0, -cylinderLength / 2, 0]} rotation={[Math.PI, 0, 0]}>
+              <sphereGeometry args={[tankRadius * 0.99, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+              <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
+            </mesh>
+          </group>
         )}
 
         {/* Support bars */}
         {[-supportOffset, supportOffset].map((y) => (
           <mesh key={y} position={[-tankRadius - 0.3, y, 0]}>
-            <boxGeometry args={[0.2, 0.2, tankRadius * 2]} />
+            <boxGeometry args={[0.2, tankRadius * 2, 0.2]} />
             <meshStandardMaterial color="hsl(var(--background))" />
           </mesh>
         ))}
