@@ -304,11 +304,28 @@ export const heightCapacityDataTank1: { [key: number]: number } = {
   2950: 98696, 2951: 98701, 2952: 98706, 2953: 98711, 2954: 98716
 };
 
-// Convert height percentage (0-100) to millimeters and get capacity
+// Maximum calibrated height of tank in millimeters
+const MAX_HEIGHT_MM = 2954;
+
+// Convert height percentage (0-100) to millimeters and estimate capacity
+// using interpolation between points in the height-capacity chart
 function getCapacityFromPercentage(percentage: number): number {
-  // Convert percentage to height in millimeters (0% = 0mm, 100% = 2954mm for full range)
-  const heightMM = Math.round((percentage / 100) * 2954);
-  return heightCapacityDataTank1[heightMM] || 202;
+  const heightMM = (percentage / 100) * MAX_HEIGHT_MM;
+
+  if (heightMM <= 0) return heightCapacityDataTank1[0];
+  if (heightMM >= MAX_HEIGHT_MM) return heightCapacityDataTank1[MAX_HEIGHT_MM];
+
+  const lower = Math.floor(heightMM);
+  const upper = Math.ceil(heightMM);
+  const lowerCap = heightCapacityDataTank1[lower];
+  const upperCap = heightCapacityDataTank1[upper];
+
+  if (lowerCap === undefined || upperCap === undefined) {
+    return heightCapacityDataTank1[lower] || heightCapacityDataTank1[0];
+  }
+
+  const ratio = heightMM - lower;
+  return Math.round(lowerCap + (upperCap - lowerCap) * ratio);
 }
 
 interface TankGaugeProps {
