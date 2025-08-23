@@ -7,6 +7,10 @@ import { Slider } from "@/components/ui/slider";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { heightCapacityDataTank1 } from "@/components/TankGauge";
 import { heightCapacityDataTank2 } from "@/data/tank2HeightCapacity";
+import {
+  getHeightFromPercentage,
+  percentageHeightData,
+} from "@/data/percentageHeightMapping";
 
 interface HorizontalCylindricalTank3DProps {
   heightPercentage: number;
@@ -160,15 +164,18 @@ const HorizontalCylindricalTank3D = ({
   selectedTank,
   onTankChange,
 }: HorizontalCylindricalTank3DProps) => {
-  const dataObj = selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
-  const maxHeight = selectedTank === 'tank2' ? 2960 : 2954;
+  const dataObj =
+    selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
+  const maxHeight =
+    percentageHeightData[selectedTank][
+      percentageHeightData[selectedTank].length - 1
+    ].height;
 
   const handleSliderChange = (value: number[]) => {
     const newPercentage = value[0];
     onHeightChange(newPercentage);
 
-    // Calculate height in mm based on percentage
-    const heightMm = (newPercentage / 100) * maxHeight; // Max height from specifications
+    const heightMm = getHeightFromPercentage(newPercentage, selectedTank);
     const capacity = getCapacityFromHeight(heightMm, dataObj, maxHeight);
     onCapacityChange(capacity);
   };
@@ -178,26 +185,18 @@ const HorizontalCylindricalTank3D = ({
   };
 
   // Calculate current height and capacity
-  const currentHeightMm = (heightPercentage / 100) * maxHeight;
-  const currentCapacity = getCapacityFromHeight(currentHeightMm, dataObj, maxHeight);
+  const currentHeightMm = getHeightFromPercentage(heightPercentage, selectedTank);
+  const currentCapacity = getCapacityFromHeight(
+    currentHeightMm,
+    dataObj,
+    maxHeight
+  );
 
-  const referenceLevels = selectedTank === 'tank2'
-    ? [
-        { level: 5, height: 121.1 },
-        { level: 10, height: 242.2 },
-        { level: 85, height: 2058.7 },
-        { level: 90, height: 2179.8 },
-        { level: 95, height: 2300.9 },
-      ]
-    : [
-        { level: 5, height: 154.45 },
-        { level: 10, height: 308.9 },
-        { level: 85, height: 2625.65 },
-        { level: 90, height: 2780.1 },
-        { level: 95, height: 2934.55 },
-      ];
+  const referenceLevels = percentageHeightData[selectedTank]
+    .filter((p) => p.percentage !== 0 && p.percentage !== 100)
+    .map((p) => ({ level: p.percentage, height: p.height }));
 
-  const displayMaxHeight = selectedTank === 'tank2' ? 2960 : 2955;
+  const displayMaxHeight = maxHeight;
 
   return (
     <Card>
