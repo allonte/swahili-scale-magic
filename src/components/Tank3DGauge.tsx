@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { Mesh } from 'three';
+import { Group, Mesh } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { heightCapacityDataTank1 } from '@/components/TankGauge';
@@ -36,13 +36,14 @@ const getCapacityFromHeight = (
   return Math.round(lowerCap + (upperCap - lowerCap) * ratio);
 };
 
-// Bullet tank mesh rendered in the 3D scene
-const CuboidTankMesh = ({ fillLevel }: { fillLevel: number }) => {
-  const tankRef = useRef<Mesh>(null);
+// Circular tank mesh rendered in the 3D scene
+const CircularTankMesh = ({ fillLevel }: { fillLevel: number }) => {
+  const tankRef = useRef<Group>(null);
   const liquidRef = useRef<Mesh>(null);
-  const tankLength = 8;
-  const tankWidth = 2;
-  const tankHeight = 2.4;
+  const tankRadius = 1.2;
+  const cylinderLength = 6;
+  const tankHeight = tankRadius * 2;
+  const tankTotalLength = cylinderLength + tankRadius * 2;
 
   useFrame((state) => {
     if (tankRef.current) {
@@ -51,90 +52,60 @@ const CuboidTankMesh = ({ fillLevel }: { fillLevel: number }) => {
     }
     const liquidHeight = (fillLevel / 100) * tankHeight;
     if (liquidRef.current) {
-      liquidRef.current.scale.y = liquidHeight;
-      liquidRef.current.position.y = -tankHeight / 2 + liquidHeight / 2;
+      liquidRef.current.scale.x = liquidHeight;
+      liquidRef.current.position.x = -tankHeight / 2 + liquidHeight / 2;
     }
   });
 
-  // Dimensions for the platform and supports
-  const supportHeight = 1;
-  const baseThickness = 0.2;
-  const baseWidth = 2.5;
-  const baseLength = tankLength + 2;
-  const baseY = -tankHeight / 2 - supportHeight - baseThickness / 2;
-  const standY = -tankHeight / 2 - supportHeight / 2;
+  const supportOffset = cylinderLength / 2 + tankRadius - 0.2;
 
   return (
-    <group>
-      {/* Tank body */}
-      <mesh ref={tankRef} position={[0, 0, 0]}>
-        <boxGeometry args={[tankLength, tankHeight, tankWidth]} />
-        <meshStandardMaterial color="hsl(var(--background))" />
-      </mesh>
-
-      {/* Liquid */}
-      {fillLevel > 0 && (
-        <mesh ref={liquidRef} position={[0, -tankHeight / 2, 0]} scale={[1, 0, 1]}>
-          <boxGeometry args={[tankLength * 0.99, 1, tankWidth * 0.99]} />
-          <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
-        </mesh>
-      )}
-
-      {/* Support stands */}
-      <mesh position={[-tankLength / 4, standY, 0]}>
-        <boxGeometry args={[1.5, supportHeight, baseWidth]} />
-        <meshStandardMaterial color="hsl(var(--background))" />
-      </mesh>
-      <mesh position={[tankLength / 4, standY, 0]}>
-        <boxGeometry args={[1.5, supportHeight, baseWidth]} />
-        <meshStandardMaterial color="hsl(var(--background))" />
-      </mesh>
-
-      {/* Base frame */}
-      <mesh position={[0, baseY, baseWidth / 2]}>
-        <boxGeometry args={[baseLength, baseThickness, 0.2]} />
-        <meshStandardMaterial color="hsl(var(--background))" />
-      </mesh>
-      <mesh position={[0, baseY, -baseWidth / 2]}>
-        <boxGeometry args={[baseLength, baseThickness, 0.2]} />
-        <meshStandardMaterial color="hsl(var(--background))" />
-      </mesh>
-      {[-baseLength / 2 + 0.5, 0, baseLength / 2 - 0.5].map((x) => (
-        <mesh key={x} position={[x, baseY, 0]}>
-          <boxGeometry args={[0.2, baseThickness, baseWidth]} />
+    <group ref={tankRef}>
+      <group rotation={[0, 0, Math.PI / 2]}>
+        {/* Tank body */}
+        <mesh>
+          <capsuleGeometry args={[tankRadius, cylinderLength, 16, 32]} />
           <meshStandardMaterial color="hsl(var(--background))" />
         </mesh>
-      ))}
 
-      {/* Top pipes */}
-      {[-tankLength / 4, 0, tankLength / 4].map((x) => (
-        <mesh key={x} position={[x, tankHeight / 2 + 0.4, 0]}>
-          <cylinderGeometry args={[0.1, 0.1, 0.5, 16]} />
-          <meshStandardMaterial color="hsl(var(--background))" />
-        </mesh>
-      ))}
+        {/* Liquid */}
+        {fillLevel > 0 && (
+          <mesh ref={liquidRef} position={[-tankHeight / 2, 0, 0]} scale={[0, 1, 1]}>
+            <capsuleGeometry args={[tankRadius * 0.99, cylinderLength, 16, 32]} />
+            <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
+          </mesh>
+        )}
 
-      {/* Level indicators */}
-      {[5, 10, 85, 90, 95].map((level) => {
-        const indicatorY = -tankHeight / 2 + (level / 100) * tankHeight;
-        return (
-          <group key={level}>
-            <mesh position={[-tankLength / 2 - 0.2, indicatorY, 0]}>
-              <boxGeometry args={[0.3, 0.05, 0.05]} />
-              <meshStandardMaterial color={Math.abs(level - fillLevel) < 5 ? '#4ade80' : 'hsl(var(--muted-foreground))'} />
-            </mesh>
-            <mesh position={[tankLength / 2 + 0.2, indicatorY, 0]}>
-              <boxGeometry args={[0.3, 0.05, 0.05]} />
-              <meshStandardMaterial color={Math.abs(level - fillLevel) < 5 ? '#4ade80' : 'hsl(var(--muted-foreground))'} />
-            </mesh>
-          </group>
-        );
-      })}
+        {/* Support bars */}
+        {[-supportOffset, supportOffset].map((y) => (
+          <mesh key={y} position={[-tankRadius - 0.3, y, 0]}>
+            <boxGeometry args={[0.2, 0.2, tankRadius * 2]} />
+            <meshStandardMaterial color="hsl(var(--background))" />
+          </mesh>
+        ))}
+
+        {/* Level indicators */}
+        {[5, 10, 85, 90, 95].map((level) => {
+          const indicatorX = -tankHeight / 2 + (level / 100) * tankHeight;
+          return (
+            <group key={level}>
+              <mesh position={[indicatorX, -tankTotalLength / 2 - 0.2, 0]}>
+                <boxGeometry args={[0.05, 0.3, 0.05]} />
+                <meshStandardMaterial color={Math.abs(level - fillLevel) < 5 ? '#4ade80' : 'hsl(var(--muted-foreground))'} />
+              </mesh>
+              <mesh position={[indicatorX, tankTotalLength / 2 + 0.2, 0]}>
+                <boxGeometry args={[0.05, 0.3, 0.05]} />
+                <meshStandardMaterial color={Math.abs(level - fillLevel) < 5 ? '#4ade80' : 'hsl(var(--muted-foreground))'} />
+              </mesh>
+            </group>
+          );
+        })}
+      </group>
     </group>
   );
 };
 
-// 3D cuboid tank gauge component
+// 3D circular tank gauge component
 const Tank3DGauge = ({ heightPercentage, onHeightChange, onCapacityChange, selectedTank }: Tank3DProps) => {
   const dataObj = selectedTank === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
   const maxHeight = selectedTank === 'tank2' ? 2960 : 2954;
@@ -171,7 +142,7 @@ const Tank3DGauge = ({ heightPercentage, onHeightChange, onCapacityChange, selec
   return (
     <Card>
       <CardHeader>
-        <CardTitle>3D Cuboid Tank Gauge</CardTitle>
+        <CardTitle>3D Circular Tank Gauge</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* 3D Canvas */}
@@ -181,7 +152,7 @@ const Tank3DGauge = ({ heightPercentage, onHeightChange, onCapacityChange, selec
             <pointLight position={[10, 10, 10]} intensity={1} />
             <directionalLight position={[-5, 10, 5]} intensity={0.8} />
             <directionalLight position={[5, -5, -5]} intensity={0.3} />
-            <CuboidTankMesh fillLevel={heightPercentage} />
+            <CircularTankMesh fillLevel={heightPercentage} />
             <OrbitControls enablePan={false} enableZoom={true} maxDistance={15} minDistance={5} />
           </Canvas>
         </div>
