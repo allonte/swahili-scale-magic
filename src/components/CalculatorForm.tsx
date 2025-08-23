@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import HorizontalBulletTank3D from "@/components/HorizontalBulletTank3D";
+import HorizontalCuboidTank3D from "@/components/HorizontalCuboidTank3D";
 import DataTableModals from "@/components/DataTableModals";
 import { getVolumeCorrectionFactor as getVCFTank1 } from "@/lib/volumeCorrection";
 import { getVolumeCorrectionFactor as getVCFTank2 } from "@/lib/volumeCorrectionTank2";
@@ -194,7 +194,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      <HorizontalBulletTank3D
+      <HorizontalCuboidTank3D
         heightPercentage={heightPercentage}
         onHeightChange={handleHeightChange}
         onCapacityChange={handleCapacityChange}
