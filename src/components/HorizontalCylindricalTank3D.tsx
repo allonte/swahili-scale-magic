@@ -40,8 +40,8 @@ const getCapacityFromHeight = (
 const CylindricalTankMesh = ({ fillLevel, capacity }: { fillLevel: number; capacity: number }) => {
   const tankRef = useRef<Group>(null);
   const liquidRef = useRef<Group>(null);
-  const tankRadius = 1.2;
-  const cylinderLength = 6;
+  const tankRadius = 1.8;
+  const cylinderLength = 8;
   const tankHeight = tankRadius * 2;
   const tankTotalLength = cylinderLength + tankRadius * 2;
   const currentFill = useRef(fillLevel);
@@ -52,9 +52,10 @@ const CylindricalTankMesh = ({ fillLevel, capacity }: { fillLevel: number; capac
     }
     currentFill.current += (fillLevel - currentFill.current) * 0.1;
     const liquidHeight = (currentFill.current / 100) * tankHeight;
+    const scale = liquidHeight / tankHeight;
     if (liquidRef.current) {
-      liquidRef.current.scale.x = liquidHeight;
-      liquidRef.current.position.x = -tankHeight / 2 + liquidHeight / 2;
+      liquidRef.current.scale.x = scale;
+      liquidRef.current.position.x = -tankRadius + tankRadius * scale;
     }
   });
 
@@ -80,7 +81,7 @@ const CylindricalTankMesh = ({ fillLevel, capacity }: { fillLevel: number; capac
 
           {/* Liquid inside */}
           {fillLevel > 0 && (
-            <group ref={liquidRef} position={[-tankHeight / 2, 0, 0]} scale={[0, 1, 1]}>
+            <group ref={liquidRef} position={[-tankRadius, 0, 0]} scale={[0, 1, 1]}>
               <mesh>
                 <cylinderGeometry args={[tankRadius * 0.99, tankRadius * 0.99, cylinderLength, 32]} />
                 <meshStandardMaterial color="#bbf7d0" transparent opacity={0.6} />
