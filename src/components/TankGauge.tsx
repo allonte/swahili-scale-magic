@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
+import { getHeightFromPercentage, percentageHeightData } from '@/data/percentageHeightMapping';
 
 // Height to capacity mapping based on tank measurements
 // Heights in MM mapped to capacities in L - Total Energies Uganda Tank Data
@@ -305,12 +306,13 @@ export const heightCapacityDataTank1: { [key: number]: number } = {
 };
 
 // Maximum calibrated height of tank in millimeters
-const MAX_HEIGHT_MM = 2954;
+const MAX_HEIGHT_MM =
+  percentageHeightData.tank1[percentageHeightData.tank1.length - 1].height;
 
 // Convert height percentage (0-100) to millimeters and estimate capacity
 // using interpolation between points in the height-capacity chart
 function getCapacityFromPercentage(percentage: number): number {
-  const heightMM = (percentage / 100) * MAX_HEIGHT_MM;
+  const heightMM = getHeightFromPercentage(percentage, 'tank1');
 
   if (heightMM <= 0) return heightCapacityDataTank1[0];
   if (heightMM >= MAX_HEIGHT_MM) return heightCapacityDataTank1[MAX_HEIGHT_MM];
