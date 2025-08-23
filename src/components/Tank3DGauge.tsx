@@ -65,15 +65,15 @@ const CircularTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         {/* Tank body */}
         <mesh>
           <cylinderGeometry args={[tankRadius, tankRadius, cylinderLength, 32]} />
-          <meshStandardMaterial color="hsl(var(--background))" />
+          <meshStandardMaterial color="#4b5563" />
         </mesh>
         <mesh position={[0, cylinderLength / 2, 0]}>
           <sphereGeometry args={[tankRadius, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-          <meshStandardMaterial color="hsl(var(--background))" />
+          <meshStandardMaterial color="#4b5563" />
         </mesh>
         <mesh position={[0, -cylinderLength / 2, 0]} rotation={[Math.PI, 0, 0]}>
           <sphereGeometry args={[tankRadius, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-          <meshStandardMaterial color="hsl(var(--background))" />
+          <meshStandardMaterial color="#4b5563" />
         </mesh>
 
         {/* Liquid */}
@@ -98,7 +98,7 @@ const CircularTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         {[-supportOffset, supportOffset].map((y) => (
           <mesh key={y} position={[-tankRadius - 0.3, y, 0]}>
             <boxGeometry args={[0.2, tankRadius * 2, 0.2]} />
-            <meshStandardMaterial color="hsl(var(--background))" />
+            <meshStandardMaterial color="#4b5563" />
           </mesh>
         ))}
 
