@@ -37,7 +37,15 @@ const getCapacityFromHeight = (
 };
 
 // Circular tank mesh rendered in the 3D scene
-const CircularTankMesh = ({ fillLevel }: { fillLevel: number }) => {
+const CircularTankMesh = ({
+  fillLevel,
+  referenceLevels,
+  maxHeightMm,
+}: {
+  fillLevel: number;
+  referenceLevels: { level: number; height: number }[];
+  maxHeightMm: number;
+}) => {
   const tankRef = useRef<Group>(null);
   const liquidRef = useRef<Group>(null);
   const tankRadius = 1.8;
@@ -104,17 +112,22 @@ const CircularTankMesh = ({ fillLevel }: { fillLevel: number }) => {
         ))}
 
         {/* Level indicators */}
-        {[5, 10, 85, 90, 95].map((level) => {
-          const indicatorX = -tankHeight / 2 + (level / 100) * tankHeight;
+        {referenceLevels.map(({ level, height }) => {
+          const indicatorX = -tankHeight / 2 + (height / maxHeightMm) * tankHeight;
+          const indicatorLevel = (height / maxHeightMm) * 100;
           return (
             <group key={level}>
               <mesh position={[indicatorX, -tankTotalLength / 2 - 0.2, 0]}>
                 <boxGeometry args={[0.05, 0.3, 0.05]} />
-                <meshStandardMaterial color={Math.abs(level - fillLevel) < 5 ? '#4ade80' : 'hsl(var(--muted-foreground))'} />
+                <meshStandardMaterial
+                  color={Math.abs(indicatorLevel - fillLevel) < 5 ? '#4ade80' : 'hsl(var(--muted-foreground))'}
+                />
               </mesh>
               <mesh position={[indicatorX, tankTotalLength / 2 + 0.2, 0]}>
                 <boxGeometry args={[0.05, 0.3, 0.05]} />
-                <meshStandardMaterial color={Math.abs(level - fillLevel) < 5 ? '#4ade80' : 'hsl(var(--muted-foreground))'} />
+                <meshStandardMaterial
+                  color={Math.abs(indicatorLevel - fillLevel) < 5 ? '#4ade80' : 'hsl(var(--muted-foreground))'}
+                />
               </mesh>
             </group>
           );
@@ -171,7 +184,11 @@ const Tank3DGauge = ({ heightPercentage, onHeightChange, onCapacityChange, selec
             <pointLight position={[10, 10, 10]} intensity={1} />
             <directionalLight position={[-5, 10, 5]} intensity={0.8} />
             <directionalLight position={[5, -5, -5]} intensity={0.3} />
-            <CircularTankMesh fillLevel={heightPercentage} />
+            <CircularTankMesh
+              fillLevel={heightPercentage}
+              referenceLevels={referenceLevels}
+              maxHeightMm={maxHeight}
+            />
             <OrbitControls enablePan={false} enableZoom={true} maxDistance={15} minDistance={5} />
           </Canvas>
         </div>
