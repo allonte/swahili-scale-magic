@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import HorizontalCylindricalTank3D from "@/components/HorizontalCylindricalTank3D";
+import TankGauge from "@/components/TankGauge";
 import DataTableModals from "@/components/DataTableModals";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getVolumeCorrectionFactor as getVCFTank1 } from "@/lib/volumeCorrection";
 import { getVolumeCorrectionFactor as getVCFTank2 } from "@/lib/volumeCorrectionTank2";
 import { heightCapacityDataTank1 } from "@/components/TankGauge";
@@ -125,8 +126,18 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
     setCapacity(getCapacityFromHeight(heightMm, heightData, maxHeight));
   };
 
-  const handleCapacityChange = (newCapacity: number) => {
-    setCapacity(newCapacity);
+  const handleTankSelection = (value: string) => {
+    if (value) {
+      onTankChange(value as 'tank1' | 'tank2');
+      const heightMm = getHeightFromPercentage(heightPercentage, value as 'tank1' | 'tank2');
+      setFormData((prev) => ({ ...prev, heightMm: heightMm.toString() }));
+      const dataObj = value === 'tank2' ? heightCapacityDataTank2 : heightCapacityDataTank1;
+      const maxHeightValue =
+        percentageHeightData[value as 'tank1' | 'tank2'][
+          percentageHeightData[value as 'tank1' | 'tank2'].length - 1
+        ].height;
+      setCapacity(getCapacityFromHeight(heightMm, dataObj, maxHeightValue));
+    }
   };
 
   // Volume correction factors (VCF) - using calibration table data
@@ -202,13 +213,25 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      <HorizontalCylindricalTank3D
-        heightPercentage={heightPercentage}
-        onHeightChange={handleHeightChange}
-        onCapacityChange={handleCapacityChange}
-        selectedTank={selectedTank}
-        onTankChange={onTankChange}
-      />
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Select Tank</label>
+          <ToggleGroup
+            type="single"
+            value={selectedTank}
+            onValueChange={handleTankSelection}
+            className="w-full"
+          >
+            <ToggleGroupItem value="tank1" className="flex-1">Tank One</ToggleGroupItem>
+            <ToggleGroupItem value="tank2" className="flex-1">Tank Two</ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+        <TankGauge
+          heightPercentage={heightPercentage}
+          onHeightChange={handleHeightChange}
+          capacity={capacity}
+        />
+      </div>
       
       <Card>
         <CardHeader>
