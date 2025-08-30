@@ -11,7 +11,7 @@ const Index = () => {
       <Header />
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#4A2D26] to-[#14E37C] bg-clip-text text-transparent mb-2">
             {selectedTank === "tank1" ? "Total Energies Uganda" : "Total Energies Uganda"}
           </h1>
           <h2 className="text-2xl font-semibold text-black mb-1">Tank Mass Calculator</h2>
