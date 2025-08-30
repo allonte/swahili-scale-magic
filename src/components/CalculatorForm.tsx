@@ -230,6 +230,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
           heightPercentage={heightPercentage}
           onHeightChange={handleHeightChange}
           capacity={capacity}
+          selectedTank={selectedTank}
         />
       </div>
       
