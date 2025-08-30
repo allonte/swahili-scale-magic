@@ -335,7 +335,7 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
         <div className="flex justify-center">
           <div className="relative w-full max-w-md">
             {/* Tank body */}
-            <div className="h-24 bg-gradient-to-b from-gray-200 to-gray-300 rounded-full relative overflow-hidden">
+            <div className="h-48 bg-gradient-to-b from-gray-200 to-gray-300 rounded-full relative overflow-hidden">
               {/* Liquid Level */}
               <div
                 className="absolute bottom-0 left-0 right-0 bg-green-500 transition-all duration-300 ease-out"
@@ -357,9 +357,8 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
 
             {/* Current level tooltip */}
             <div className="absolute -top-12 right-0 translate-x-4">
-              <div className="bg-background border px-2 py-1 rounded shadow text-xs font-bold text-foreground whitespace-nowrap">
-                {fillHeight}%
-                <br />
+              <div className="bg-background border px-2 py-1 rounded shadow text-xs font-bold text-foreground whitespace-nowrap flex items-center gap-1">
+                <span>{fillHeight}%</span>
                 <span className="font-normal">{capacity.toLocaleString()} L</span>
               </div>
             </div>
@@ -384,7 +383,7 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
         </div>
 
         {/* Display Values */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <div className="text-center p-4 bg-secondary/20 rounded-lg border">
             <div className="text-2xl font-bold text-primary">{heightPercentage}%</div>
             <div className="text-sm text-muted-foreground">Height</div>
