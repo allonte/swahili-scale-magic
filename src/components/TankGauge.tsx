@@ -335,10 +335,10 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
         <div className="flex justify-center">
           <div className="relative">
             {/* Tank Outline - Horizontal cylinder with hemispherical ends */}
-            <div className="w-64 h-32 border-4 border-green-500 rounded-full bg-background relative overflow-hidden">
+            <div className="w-96 h-32 border-4 border-green-500 rounded-full bg-background relative overflow-hidden">
               {/* Liquid Level */}
               <div
-                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-400 to-green-200 transition-all duration-300 ease-out"
+                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-700 to-green-500 transition-all duration-300 ease-out"
                 style={{ height: `${fillHeight}%` }}
               />
               {/* Percentage Labels */}
@@ -348,6 +348,9 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
                 <div className="text-xs font-bold text-foreground/70">0%</div>
               </div>
             </div>
+
+            {/* Tank Support */}
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-80 h-3 bg-gray-400 rounded" />
 
             {/* Current Level Indicator */}
             <div
