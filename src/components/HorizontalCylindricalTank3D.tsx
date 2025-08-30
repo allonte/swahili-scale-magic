@@ -4,6 +4,13 @@ import { OrbitControls, Text } from '@react-three/drei';
 import { Group } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { heightCapacityDataTank1 } from "@/components/TankGauge";
 import { heightCapacityDataTank2 } from "@/data/tank2HeightCapacity";
 import {
@@ -179,8 +186,7 @@ const HorizontalCylindricalTank3D = ({
     onCapacityChange(capacity);
   };
 
-  const handleTankChange = (value: number[]) => {
-    const tankValue = value[0] === 1 ? 'tank1' : 'tank2';
+  const handleTankChange = (tankValue: 'tank1' | 'tank2') => {
     onTankChange(tankValue);
   };
 
@@ -207,18 +213,15 @@ const HorizontalCylindricalTank3D = ({
         {/* Tank selection */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Tank</label>
-          <Slider
-            value={[selectedTank === 'tank1' ? 1 : 2]}
-            onValueChange={handleTankChange}
-            min={1}
-            max={2}
-            step={1}
-            className="w-full"
-          />
-          <div className="flex justify-between text-xs">
-            <span>Tank One</span>
-            <span>Tank Two</span>
-          </div>
+          <Select value={selectedTank} onValueChange={handleTankChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Choose tank" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="tank1">Tank One</SelectItem>
+              <SelectItem value="tank2">Tank Two</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* 3D Canvas */}
