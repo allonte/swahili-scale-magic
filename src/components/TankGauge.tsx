@@ -332,8 +332,8 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
         {/* Visual Tank Gauge */}
         <div className="flex justify-center">
           <div className="relative">
-            {/* Tank Outline */}
-            <div className="w-64 h-64 border-4 border-green-500 rounded-full bg-secondary/20 relative overflow-hidden">
+            {/* Tank Outline - Horizontal cylinder with hemispherical ends */}
+            <div className="w-64 h-32 border-4 border-green-500 rounded-full bg-[#FCF7F8] relative overflow-hidden">
               {/* Liquid Level */}
               <div
                 className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-400 to-green-200 transition-all duration-300 ease-out"
