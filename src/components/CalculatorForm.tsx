@@ -219,20 +219,20 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <div className="rounded-xl bg-gray-100 p-6 text-gray-900 space-y-4">
-          <h2 className="text-xl font-semibold">Mass Calculator</h2>
+        <div className="rounded-xl bg-gray-100 p-6 text-black space-y-4">
+          <h2 className="text-xl font-semibold text-black">Mass Calculator</h2>
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium">
               <Cylinder className="h-4 w-4" />
               <span>Select Tank</span>
             </div>
             <Select value={selectedTank} onValueChange={handleTankSelection}>
-              <SelectTrigger className="w-full bg-white/20 text-white border-none focus:ring-0 focus:ring-offset-0">
+            <SelectTrigger className="w-full bg-white/20 text-black border-none focus:ring-0 focus:ring-offset-0">
                 <SelectValue placeholder="Choose tank" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="tank1">Tank One</SelectItem>
-                <SelectItem value="tank2">Tank Two</SelectItem>
+                <SelectItem value="tank1" className="text-black">Tank One</SelectItem>
+                <SelectItem value="tank2" className="text-black">Tank Two</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -369,7 +369,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
               <div className="pt-2 border-t">
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-semibold">Mass (kg)</span>
-                  <span className="text-xl font-bold text-primary">{results.mass.toFixed(3)}</span>
+                  <span className="text-xl font-bold text-black">{results.mass.toFixed(3)}</span>
                 </div>
               </div>
               <div className="flex gap-2 pt-4">
