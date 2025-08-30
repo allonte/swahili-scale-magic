@@ -2,9 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { referenceLevels } from '@/data/referenceLevels';
-// getHeightFromPercentage and percentageHeightData were previously used for
-// internal capacity calculations. The gauge now receives capacity from props,
-// so these imports are no longer required.
+import { getHeightFromPercentage } from '@/data/percentageHeightMapping';
 
 // Height to capacity mapping based on tank measurements
 // Heights in MM mapped to capacities in L - Total Energies Uganda Tank Data
@@ -324,6 +322,7 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
   // Ensure the displayed fill level remains within valid bounds so the
   // liquid animation always rises from the bottom of the gauge.
   const fillHeight = Math.max(0, Math.min(100, heightPercentage));
+  const heightMm = getHeightFromPercentage(heightPercentage, selectedTank);
 
   return (
     <Card className="w-full">
@@ -359,6 +358,7 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
             <div className="absolute -top-12 right-0 translate-x-4">
               <div className="bg-background border px-2 py-1 rounded shadow text-xs font-bold text-foreground whitespace-nowrap flex items-center gap-1">
                 <span>{fillHeight}%</span>
+                <span className="font-normal">{Math.round(heightMm).toLocaleString()} mm</span>
                 <span className="font-normal">{capacity.toLocaleString()} L</span>
               </div>
             </div>
@@ -383,10 +383,14 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
         </div>
 
         {/* Display Values */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div className="text-center p-4 bg-secondary/20 rounded-lg border">
             <div className="text-2xl font-bold text-primary">{heightPercentage}%</div>
-            <div className="text-sm text-muted-foreground">Height</div>
+            <div className="text-sm text-muted-foreground">Height (%)</div>
+          </div>
+          <div className="text-center p-4 bg-secondary/20 rounded-lg border">
+            <div className="text-2xl font-bold text-primary">{Math.round(heightMm).toLocaleString()}</div>
+            <div className="text-sm text-muted-foreground">Height (mm)</div>
           </div>
           <div className="text-center p-4 bg-secondary/20 rounded-lg border">
             <div className="text-2xl font-bold text-primary">{capacity.toLocaleString()}</div>
