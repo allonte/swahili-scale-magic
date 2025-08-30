@@ -352,13 +352,8 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
               ))}
             </div>
 
-            {/* Tank base and supports */}
-            <div className="absolute left-0 -bottom-8 w-full h-3 bg-gray-500 rounded" />
-            <div className="absolute left-0 -bottom-5 w-full flex justify-around">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="w-4 h-4 bg-gray-400 rounded" />
-              ))}
-            </div>
+            {/* Tank base */}
+            <div className="absolute left-0 -bottom-3 w-full h-3 bg-gray-500 rounded" />
 
             {/* Current level tooltip */}
             <div className="absolute -top-12 right-0 translate-x-4">
