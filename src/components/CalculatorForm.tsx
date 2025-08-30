@@ -216,7 +216,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   };
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Tank</label>
@@ -237,13 +237,14 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
           selectedTank={selectedTank}
         />
       </div>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Manual Inputs</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Manual Inputs</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="productDensity">Product Density (kg/L)</Label>
               <Input
@@ -383,7 +384,8 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
           )}
         </CardContent>
       </Card>
-      
+      </div>
+
       <DataTableModals
         showShellFactors={showShellFactors}
         showPressureFactors={showPressureFactors}
