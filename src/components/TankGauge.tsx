@@ -333,9 +333,9 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
       <CardContent className="space-y-6">
         {/* Visual Tank Gauge */}
         <div className="flex justify-center">
-          <div className="relative">
+          <div className="relative w-full max-w-md">
             {/* Tank body */}
-            <div className="w-full max-w-md h-24 bg-gradient-to-b from-gray-200 to-gray-300 rounded-full relative overflow-hidden">
+            <div className="h-24 bg-gradient-to-b from-gray-200 to-gray-300 rounded-full relative overflow-hidden">
               {/* Liquid Level */}
               <div
                 className="absolute bottom-0 left-0 right-0 bg-green-500 transition-all duration-300 ease-out"
