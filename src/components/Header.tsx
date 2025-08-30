@@ -13,7 +13,7 @@ const Header = () => {
             alt="Murban logo"
             className="w-16 h-16 object-contain rounded"
           />
-          <span className="font-bold text-foreground">Murban limited</span>
+          <span className="font-bold text-foreground">Murban Engineering</span>
         </Link>
         <nav className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
