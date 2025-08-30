@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
+import { referenceLevels } from '@/data/referenceLevels';
 // getHeightFromPercentage and percentageHeightData were previously used for
 // internal capacity calculations. The gauge now receives capacity from props,
 // so these imports are no longer required.
@@ -311,9 +312,10 @@ interface TankGaugeProps {
   heightPercentage: number;
   capacity: number;
   onHeightChange: (height: number) => void;
+  selectedTank: 'tank1' | 'tank2';
 }
 
-const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHeightChange }) => {
+const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHeightChange, selectedTank }) => {
   const handleSliderChange = (values: number[]) => {
     const newHeight = values[0];
     onHeightChange(newHeight);
@@ -386,6 +388,34 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
             <div className="text-2xl font-bold text-primary">{capacity.toLocaleString()}</div>
             <div className="text-sm text-muted-foreground">Capacity (L)</div>
           </div>
+        </div>
+
+        <div className="border-t pt-4">
+          <h4 className="font-semibold text-sm mb-3">Capacity Chart Information</h4>
+          <p className="text-xs text-muted-foreground mb-2">
+            This document provides a capacity chart for the tank, showing the corresponding liquid volume in liters based on the liquid height.
+            The percentage levels below are based on the total calibrated internal height of the tank, and for estimating product volume
+            relative to the tank's fill level during operations, inspections, or inventory management.
+          </p>
+          {(() => {
+            const levels = referenceLevels[selectedTank];
+            const maxHeight = selectedTank === 'tank2' ? 2960 : 2955;
+            return (
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="space-y-1">
+                  {levels.slice(0, 3).map(({ level, height }) => (
+                    <div key={level}><strong>{level}%:</strong> {height} mm</div>
+                  ))}
+                </div>
+                <div className="space-y-1">
+                  {levels.slice(3).map(({ level, height }) => (
+                    <div key={level}><strong>{level}%:</strong> {height} mm</div>
+                  ))}
+                  <div><strong>Max:</strong> {maxHeight} mm</div>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </CardContent>
     </Card>
