@@ -334,31 +334,38 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
         {/* Visual Tank Gauge */}
         <div className="flex justify-center">
           <div className="relative">
-            {/* Tank Outline - Horizontal cylinder with hemispherical ends */}
-            <div className="w-96 h-32 border-4 border-green-500 rounded-full bg-background relative overflow-hidden">
+            {/* Tank body */}
+            <div className="w-96 h-24 bg-gradient-to-b from-gray-200 to-gray-300 rounded-full relative overflow-hidden">
               {/* Liquid Level */}
               <div
-                className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-green-700 to-green-500 transition-all duration-300 ease-out"
+                className="absolute bottom-0 left-0 right-0 bg-green-500 transition-all duration-300 ease-out"
                 style={{ height: `${fillHeight}%` }}
               />
-              {/* Percentage Labels */}
-              <div className="absolute inset-0 flex flex-col justify-between py-2 px-1">
-                <div className="text-xs font-bold text-foreground/70">100%</div>
-                <div className="text-xs font-bold text-foreground/70">50%</div>
-                <div className="text-xs font-bold text-foreground/70">0%</div>
-              </div>
+
+              {/* Tank top markers */}
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 bg-gray-400 rounded-full"
+                  style={{ top: '-0.25rem', left: `${(i / 4) * 100}%`, transform: 'translateX(-50%)' }}
+                />
+              ))}
             </div>
 
-            {/* Tank Support */}
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-80 h-3 bg-gray-400 rounded" />
+            {/* Tank base and supports */}
+            <div className="absolute left-0 -bottom-8 w-full h-3 bg-gray-500 rounded" />
+            <div className="absolute left-0 -bottom-5 w-full flex justify-around">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="w-4 h-4 bg-gray-400 rounded" />
+              ))}
+            </div>
 
-            {/* Current Level Indicator */}
-            <div
-              className="absolute right-0 w-6 h-1 bg-accent border border-accent-foreground rounded-r transform -translate-y-1/2 transition-all duration-300"
-              style={{ bottom: `${fillHeight}%` }}
-            >
-              <div className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-background border border-accent-foreground rounded px-2 py-1 text-xs font-bold whitespace-nowrap">
+            {/* Current level tooltip */}
+            <div className="absolute -top-12 right-0 translate-x-4">
+              <div className="bg-background border px-2 py-1 rounded shadow text-xs font-bold text-foreground whitespace-nowrap">
                 {fillHeight}%
+                <br />
+                <span className="font-normal">{capacity.toLocaleString()} L</span>
               </div>
             </div>
           </div>
