@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Cylinder } from "lucide-react";
 import { getVolumeCorrectionFactor as getVCFTank1 } from "@/lib/volumeCorrection";
 import { getVolumeCorrectionFactor as getVCFTank2 } from "@/lib/volumeCorrectionTank2";
 import { heightCapacityDataTank1 } from "@/components/TankGauge";
@@ -218,17 +219,23 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Select Tank</label>
-          <Select value={selectedTank} onValueChange={handleTankSelection}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Choose tank" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="tank1">Tank One</SelectItem>
-              <SelectItem value="tank2">Tank Two</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-blue-600 p-6 text-white space-y-4">
+          <h2 className="text-xl font-semibold">Mass Calculator</h2>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <Cylinder className="h-4 w-4" />
+              <span>Select Tank</span>
+            </div>
+            <Select value={selectedTank} onValueChange={handleTankSelection}>
+              <SelectTrigger className="w-full bg-white/20 text-white border-none focus:ring-0 focus:ring-offset-0">
+                <SelectValue placeholder="Choose tank" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="tank1">Tank One</SelectItem>
+                <SelectItem value="tank2">Tank Two</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <TankGauge
           heightPercentage={heightPercentage}
