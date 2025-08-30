@@ -1,7 +1,9 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
-import { getHeightFromPercentage, percentageHeightData } from '@/data/percentageHeightMapping';
+// getHeightFromPercentage and percentageHeightData were previously used for
+// internal capacity calculations. The gauge now receives capacity from props,
+// so these imports are no longer required.
 
 // Height to capacity mapping based on tank measurements
 // Heights in MM mapped to capacities in L - Total Energies Uganda Tank Data
@@ -305,45 +307,16 @@ export const heightCapacityDataTank1: { [key: number]: number } = {
   2950: 98696, 2951: 98701, 2952: 98706, 2953: 98711, 2954: 98716
 };
 
-// Maximum calibrated height of tank in millimeters
-const MAX_HEIGHT_MM =
-  percentageHeightData.tank1[percentageHeightData.tank1.length - 1].height;
-
-// Convert height percentage (0-100) to millimeters and estimate capacity
-// using interpolation between points in the height-capacity chart
-function getCapacityFromPercentage(percentage: number): number {
-  const heightMM = getHeightFromPercentage(percentage, 'tank1');
-
-  if (heightMM <= 0) return heightCapacityDataTank1[0];
-  if (heightMM >= MAX_HEIGHT_MM) return heightCapacityDataTank1[MAX_HEIGHT_MM];
-
-  const lower = Math.floor(heightMM);
-  const upper = Math.ceil(heightMM);
-  const lowerCap = heightCapacityDataTank1[lower];
-  const upperCap = heightCapacityDataTank1[upper];
-
-  if (lowerCap === undefined || upperCap === undefined) {
-    return heightCapacityDataTank1[lower] || heightCapacityDataTank1[0];
-  }
-
-  const ratio = heightMM - lower;
-  return Math.round(lowerCap + (upperCap - lowerCap) * ratio);
-}
-
 interface TankGaugeProps {
   heightPercentage: number;
+  capacity: number;
   onHeightChange: (height: number) => void;
-  onCapacityChange: (capacity: number) => void;
 }
 
-const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, onHeightChange, onCapacityChange }) => {
-  const capacity = getCapacityFromPercentage(heightPercentage);
-
+const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHeightChange }) => {
   const handleSliderChange = (values: number[]) => {
     const newHeight = values[0];
-    const newCapacity = getCapacityFromPercentage(newHeight);
     onHeightChange(newHeight);
-    onCapacityChange(newCapacity);
   };
 
   // Ensure the displayed fill level remains within valid bounds so the
