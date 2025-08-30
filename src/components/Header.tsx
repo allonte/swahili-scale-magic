@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 const Header = () => {
   return (
     <header className="bg-card border-b border-border">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-2">
         <Link to="/" className="flex items-center gap-2">
           <img
             src="/murbanlogo.jpg"
             alt="Murban logo"
-            className="w-16 h-16 object-contain rounded"
+            className="w-12 h-12 object-contain rounded"
           />
           <span className="font-bold text-foreground">Murban limited</span>
         </Link>
