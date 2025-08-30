@@ -6,7 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import TankGauge from "@/components/TankGauge";
 import DataTableModals from "@/components/DataTableModals";
-import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getVolumeCorrectionFactor as getVCFTank1 } from "@/lib/volumeCorrection";
 import { getVolumeCorrectionFactor as getVCFTank2 } from "@/lib/volumeCorrectionTank2";
 import { heightCapacityDataTank1 } from "@/components/TankGauge";
@@ -126,8 +132,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
     setCapacity(getCapacityFromHeight(heightMm, heightData, maxHeight));
   };
 
-  const handleTankSelection = (value: number[]) => {
-    const tankValue = value[0] === 1 ? 'tank1' : 'tank2';
+  const handleTankSelection = (tankValue: 'tank1' | 'tank2') => {
     onTankChange(tankValue);
     const heightMm = getHeightFromPercentage(heightPercentage, tankValue);
     setFormData((prev) => ({ ...prev, heightMm: heightMm.toString() }));
@@ -215,18 +220,15 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
       <div className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Tank</label>
-          <Slider
-            value={[selectedTank === 'tank1' ? 1 : 2]}
-            onValueChange={handleTankSelection}
-            min={1}
-            max={2}
-            step={1}
-            className="w-full"
-          />
-          <div className="flex justify-between text-xs">
-            <span>Tank One</span>
-            <span>Tank Two</span>
-          </div>
+          <Select value={selectedTank} onValueChange={handleTankSelection}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Choose tank" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="tank1">Tank One</SelectItem>
+              <SelectItem value="tank2">Tank Two</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <TankGauge
           heightPercentage={heightPercentage}
