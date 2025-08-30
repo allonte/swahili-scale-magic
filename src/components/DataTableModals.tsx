@@ -240,7 +240,7 @@ const DataTableModals = ({ showShellFactors, showPressureFactors, showHeightCapa
             <DialogTitle>Height ↔ Capacity Table</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               {description.map((item, index) => (
                 <div key={index}>
                   <strong>{item.label}:</strong> {item.value}

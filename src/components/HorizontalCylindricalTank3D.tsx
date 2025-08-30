@@ -260,7 +260,7 @@ const HorizontalCylindricalTank3D = ({
           </div>
 
           {/* Display current values */}
-          <div className="grid grid-cols-2 gap-4 text-sm bg-muted/30 p-3 rounded-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-muted/30 p-3 rounded-lg">
             <div>
               <span className="font-medium text-muted-foreground">Fill Level:</span>
               <div className="text-lg font-semibold text-primary">{heightPercentage.toFixed(1)}%</div>
@@ -282,7 +282,7 @@ const HorizontalCylindricalTank3D = ({
           {/* Key level indicators */}
           <div className="text-xs text-muted-foreground bg-muted/20 p-2 rounded">
             <div className="font-medium mb-1">Reference Levels:</div>
-            <div className="grid grid-cols-2 gap-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
               {referenceLevels.map(({ level, height }) => (
                 <div key={level}>{level}% → {height} mm</div>
               ))}

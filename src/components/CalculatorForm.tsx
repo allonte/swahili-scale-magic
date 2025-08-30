@@ -251,7 +251,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
             <CardTitle>Manual Inputs</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="productDensity">Product Density (kg/L)</Label>
               <Input
@@ -273,7 +273,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="shellTemperature">Shell Temperature (°C)</Label>
               <Input
@@ -294,7 +294,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="pressure">Pressure (bar)</Label>
               <Input
@@ -340,7 +340,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
         <CardContent>
           {results && typeof results === 'object' ? (
             <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Reference Volume (L)</span>
                   <span className="font-medium">{results.referenceVolume.toFixed(3)}</span>
