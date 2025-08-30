@@ -78,31 +78,56 @@ const CircularTankMesh = ({
         {/* Tank body */}
         <mesh>
           <cylinderGeometry args={[tankRadius, tankRadius, cylinderLength, 32]} />
-          <meshStandardMaterial color="#4b5563" />
+          <meshStandardMaterial color="#9ca3af" />
         </mesh>
         <mesh position={[0, cylinderLength / 2, 0]}>
           <sphereGeometry args={[tankRadius, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-          <meshStandardMaterial color="#4b5563" />
+          <meshStandardMaterial color="#9ca3af" />
         </mesh>
         <mesh position={[0, -cylinderLength / 2, 0]} rotation={[Math.PI, 0, 0]}>
           <sphereGeometry args={[tankRadius, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-          <meshStandardMaterial color="#4b5563" />
+          <meshStandardMaterial color="#9ca3af" />
         </mesh>
+
+        {/* Empty (gas) portion */}
+        <group position={[-tankRadius, 0, 0]}>
+          <mesh>
+            <cylinderGeometry args={[tankRadius * 0.99, tankRadius * 0.99, cylinderLength, 32]} />
+            <meshStandardMaterial color="#e5e7eb" />
+          </mesh>
+          <mesh position={[0, cylinderLength / 2, 0]}>
+            <sphereGeometry args={[tankRadius * 0.99, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color="#e5e7eb" />
+          </mesh>
+          <mesh position={[0, -cylinderLength / 2, 0]} rotation={[Math.PI, 0, 0]}>
+            <sphereGeometry args={[tankRadius * 0.99, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color="#e5e7eb" />
+          </mesh>
+        </group>
 
         {/* Liquid */}
         {fillLevel > 0 && (
           <group ref={liquidRef} position={[-tankRadius, 0, 0]} scale={[0, 1, 1]}>
             <mesh>
               <cylinderGeometry args={[tankRadius * 0.99, tankRadius * 0.99, cylinderLength, 32]} />
-              <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
+              <meshStandardMaterial
+                color="#16a34a"
+                depthTest={false}
+              />
             </mesh>
             <mesh position={[0, cylinderLength / 2, 0]}>
               <sphereGeometry args={[tankRadius * 0.99, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-              <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
+              <meshStandardMaterial
+                color="#16a34a"
+                depthTest={false}
+              />
             </mesh>
             <mesh position={[0, -cylinderLength / 2, 0]} rotation={[Math.PI, 0, 0]}>
               <sphereGeometry args={[tankRadius * 0.99, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-              <meshStandardMaterial color="#22c55e" transparent opacity={0.6} />
+              <meshStandardMaterial
+                color="#16a34a"
+                depthTest={false}
+              />
             </mesh>
           </group>
         )}
@@ -111,7 +136,7 @@ const CircularTankMesh = ({
         {[-supportOffset, supportOffset].map((y) => (
           <mesh key={y} position={[-tankRadius - 0.3, y, 0]}>
             <boxGeometry args={[0.2, tankRadius * 2, 0.2]} />
-            <meshStandardMaterial color="#4b5563" />
+            <meshStandardMaterial color="#9ca3af" />
           </mesh>
         ))}
 
