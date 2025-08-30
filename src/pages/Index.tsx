@@ -12,7 +12,7 @@ const Index = () => {
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            {selectedTank === "tank1" ? "Total Energies Uganda" : "Total Energies Jinja."}
+            {selectedTank === "tank1" ? "Total Energies Uganda" : "Total Energies Uganda"}
           </h1>
           <h2 className="text-2xl font-semibold text-primary mb-1">Tank Mass Calculator</h2>
           <p className="text-muted-foreground">
