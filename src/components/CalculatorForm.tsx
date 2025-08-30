@@ -219,7 +219,7 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <div className="rounded-xl bg-gradient-to-r from-red-600 via-red-500 to-blue-600 p-6 text-white space-y-4">
+        <div className="rounded-xl bg-[hsl(228,36%,16%)] p-6 text-white space-y-4">
           <h2 className="text-xl font-semibold">Mass Calculator</h2>
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium">
