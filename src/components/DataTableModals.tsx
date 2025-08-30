@@ -40,7 +40,7 @@ const tankDetails: Record<'tank1' | 'tank2', { label: string; value: string }[]>
   ],
   tank2: [
     { label: "Tank", value: "Tank 02" },
-    { label: "Tank Owner", value: "Total Energies Jinja." },
+    { label: "Tank Owner", value: "Total Energies Uganda" },
     { label: "Location", value: "Jinja, Uganda" },
     { label: "Tank Description", value: "LPG Bullet Tank" },
     { label: "Nominal Diameter", value: "2422 mm" },

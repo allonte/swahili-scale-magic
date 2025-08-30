@@ -16,7 +16,7 @@ const tankSpecifications: Record<'tank1' | 'tank2', { label: string; value: stri
   ],
   tank2: [
     { label: "Tank", value: "Tank 02", label2: "Date of Calibration", value2: "29/06/2025" },
-    { label: "Tank Owner", value: "Total Energies Jinja.", label2: "Validity", value2: "10 Years" },
+    { label: "Tank Owner", value: "Total Energies Uganda", label2: "Validity", value2: "10 Years" },
     { label: "Location", value: "Jinja, Uganda", label2: "Overall Uncertainty", value2: "+0.012%" },
     { label: "Tank Description", value: "LPG Bullet Tank", label2: "Method of Calibration", value2: "API MPMS CHAPTER 2" },
     { label: "Nominal Diameter", value: "2422 mm", label2: "Tank calibrated by", value2: "Murban Engineering Limited" },
