@@ -311,15 +311,15 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
           </div>
 
           <div className="flex flex-wrap gap-2 pt-4">
-            <Button onClick={handleCalculate}>Calculate</Button>
+            <Button variant="outline" onClick={handleCalculate}>Calculate</Button>
             <Button variant="outline" onClick={handleReset}>Reset</Button>
-            <Button variant="outline" size="sm" onClick={() => setShowShellFactors(true)}>
+            <Button variant="outline" onClick={() => setShowShellFactors(true)}>
               Shell Correction Factors
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowPressureFactors(true)}>
+            <Button variant="outline" onClick={() => setShowPressureFactors(true)}>
               Pressure Factors
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowHeightCapacity(true)}>
+            <Button variant="outline" onClick={() => setShowHeightCapacity(true)}>
               Height↔Capacity Table
             </Button>
           </div>
