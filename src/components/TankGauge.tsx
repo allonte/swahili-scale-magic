@@ -395,11 +395,6 @@ const TankGauge: React.FC<TankGaugeProps> = ({ heightPercentage, capacity, onHei
 
         <div className="border-t pt-4">
           <h4 className="font-semibold text-sm mb-3">Capacity Chart Information</h4>
-          <p className="text-xs text-muted-foreground mb-2">
-            This document provides a capacity chart for the tank, showing the corresponding liquid volume in liters based on the liquid height.
-            The percentage levels below are based on the total calibrated internal height of the tank, and for estimating product volume
-            relative to the tank's fill level during operations, inspections, or inventory management.
-          </p>
           {(() => {
             const levels = referenceLevels[selectedTank];
             const maxHeight = selectedTank === 'tank2' ? 2960 : 2955;
