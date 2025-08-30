@@ -4,7 +4,6 @@ import { OrbitControls, Text } from '@react-three/drei';
 import { Group } from 'three';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { heightCapacityDataTank1 } from "@/components/TankGauge";
 import { heightCapacityDataTank2 } from "@/data/tank2HeightCapacity";
 import {
@@ -180,8 +179,9 @@ const HorizontalCylindricalTank3D = ({
     onCapacityChange(capacity);
   };
 
-  const handleTankChange = (value: string) => {
-    if (value) onTankChange(value);
+  const handleTankChange = (value: number[]) => {
+    const tankValue = value[0] === 1 ? 'tank1' : 'tank2';
+    onTankChange(tankValue);
   };
 
   // Calculate current height and capacity
@@ -207,19 +207,18 @@ const HorizontalCylindricalTank3D = ({
         {/* Tank selection */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Tank</label>
-          <ToggleGroup
-            type="single"
-            value={selectedTank}
+          <Slider
+            value={[selectedTank === 'tank1' ? 1 : 2]}
             onValueChange={handleTankChange}
+            min={1}
+            max={2}
+            step={1}
             className="w-full"
-          >
-            <ToggleGroupItem value="tank1" className="flex-1">
-              Tank One
-            </ToggleGroupItem>
-            <ToggleGroupItem value="tank2" className="flex-1">
-              Tank Two
-            </ToggleGroupItem>
-          </ToggleGroup>
+          />
+          <div className="flex justify-between text-xs">
+            <span>Tank One</span>
+            <span>Tank Two</span>
+          </div>
         </div>
 
         {/* 3D Canvas */}
