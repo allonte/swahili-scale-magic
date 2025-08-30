@@ -227,12 +227,18 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
               <span>Select Tank</span>
             </div>
             <Select value={selectedTank} onValueChange={handleTankSelection}>
-            <SelectTrigger className="w-full bg-white/20 text-black border-none focus:ring-0 focus:ring-offset-0">
+              <SelectTrigger
+                className={`w-full bg-white/20 border-none focus:ring-0 focus:ring-offset-0 ${selectedTank === 'tank1' ? 'text-green-600 font-semibold' : 'text-black'}`}
+              >
                 <SelectValue placeholder="Choose tank" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="tank1" className="text-black">Tank One</SelectItem>
-                <SelectItem value="tank2" className="text-black">Tank Two</SelectItem>
+                <SelectItem value="tank1" className="text-green-600 font-semibold">
+                  Tank One
+                </SelectItem>
+                <SelectItem value="tank2" className="text-black">
+                  Tank Two
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
