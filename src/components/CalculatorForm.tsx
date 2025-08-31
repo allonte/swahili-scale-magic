@@ -227,27 +227,34 @@ const CalculatorForm = ({ selectedTank, onTankChange }: CalculatorFormProps) => 
               <span>Select Tank</span>
             </div>
             <Select value={selectedTank} onValueChange={handleTankSelection}>
-                <SelectTrigger
-                className={`w-full bg-white/20 focus:ring-0 focus:ring-offset-0 ${
-                  selectedTank === 'tank1'
-                    ? 'border-2 border-green-600 text-green-600 font-semibold'
-                    : 'border-none text-green-600'
-                }`}
+              <SelectTrigger
+                className="w-full bg-white/20 focus:ring-0 focus:ring-offset-0 border-2 border-green-600 text-green-600 font-semibold"
+              >
+                <SelectValue placeholder="Choose tank" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  value="tank1"
+                  className={`text-green-600 ${
+                    selectedTank === 'tank1'
+                      ? 'font-semibold border-2 border-green-600'
+                      : ''
+                  }`}
                 >
-                  <SelectValue placeholder="Choose tank" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem
-                    value="tank1"
-                    className="text-green-600 font-semibold border-2 border-green-600"
-                  >
-                    Tank One
-                  </SelectItem>
-                  <SelectItem value="tank2" className="text-green-600">
-                    Tank Two
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                  Tank One
+                </SelectItem>
+                <SelectItem
+                  value="tank2"
+                  className={`text-green-600 ${
+                    selectedTank === 'tank2'
+                      ? 'font-semibold border-2 border-green-600'
+                      : ''
+                  }`}
+                >
+                  Tank Two
+                </SelectItem>
+              </SelectContent>
+            </Select>
             </div>
         </div>
         <TankGauge
