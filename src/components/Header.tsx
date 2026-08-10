@@ -14,13 +14,11 @@ const Header = () => {
         <Link to="/" className="flex items-center gap-2">
           <img
             src="/murbanlogo.png"
-            alt="Murban logo"
-            className="w-12 h-12 object-contain rounded"
+            alt="Murban Engineering"
+            className="h-10 w-auto object-contain"
           />
-
-
-          <span className="font-bold text-foreground">Murban Engineering</span>
         </Link>
+
         <div className="flex items-center gap-2">
           <nav className="hidden sm:flex items-center gap-4">
             <Button variant="ghost" size="sm" asChild>
