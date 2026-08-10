@@ -4,7 +4,7 @@ import HelpDialog from "./HelpDialog";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import murbanLogoAsset from "@/assets/murban-logo.png.asset.json";
+
 
 
 const Header = () => {
@@ -13,10 +13,11 @@ const Header = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-2">
         <Link to="/" className="flex items-center gap-2">
           <img
-            src={murbanLogoAsset.url}
+            src="/murbanlogo.png"
             alt="Murban logo"
             className="w-12 h-12 object-contain rounded"
           />
+
 
           <span className="font-bold text-foreground">Murban Engineering</span>
         </Link>
